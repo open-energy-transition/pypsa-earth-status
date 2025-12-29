@@ -19,12 +19,13 @@ watch:
 # Navigation
 nav:
 - Home:
-  - index.md
+  - Home: index.md
   - Introduction: home/introduction.md
   - Installation: home/installation.md
   - Quick Start: home/quick-start.md
 
 - User Guide:
+  - Overview: user-guide/user-guide.md
   - Structure: user-guide/structure.md
 
 - API Reference:
@@ -117,6 +118,8 @@ markdown_extensions:
 - pymdownx.inlinehilite
 - pymdownx.snippets:
     base_path: ['.', 'doc']
+    auto_append:
+    - includes/abbreviations.md
 - abbr
 - attr_list
 - def_list

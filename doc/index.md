@@ -25,7 +25,7 @@
 
     ---
 
-    [:octicons-arrow-right-24: Features](user-guide/structure.md)
+    [:octicons-arrow-right-24: Features](user-guide/user-guide.md)
 
 -   :material-new-box:{ .lg .middle } **API reference**
 
@@ -46,7 +46,7 @@
     Find a detailed description of the PyPSA-Earth-Status **design and architecture** here.
 
 
-    [:octicons-arrow-right-24: User Guide](user-guide.md)
+    [:octicons-arrow-right-24: User Guide](user-guide/user-guide.md)
 
 -   :octicons-code-16:{ .lg .middle } **API Reference**
 
