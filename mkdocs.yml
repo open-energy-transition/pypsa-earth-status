@@ -28,6 +28,9 @@ nav:
   - Overview: user-guide/user-guide.md
   - Structure: user-guide/structure.md
 
+- Community:
+  - Overview: community/contributing.md
+
 - API Reference:
   - Overview: api-reference/api_reference.md
 
