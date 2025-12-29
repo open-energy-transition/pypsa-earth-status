@@ -28,6 +28,20 @@ The example described in the quick start guide uses a minimal PyPSA network base
 
 ![PyPSA-Earth-Status workflow DAG](workflow_dag.png)
 
+The actions mentioned above are implemented through the following Snakemake rules:
+
+1. **Create reference statistics**
+    - `create_example_DE` (for the example workflow only)
+    - `clean_data`
+    - `build_reference_statistics`
+2. **Extract network statistics**
+    - `build_network_statistics`
+    - `build_network_geojson`
+3. **Compare and visualize**
+    - `make_comparison`
+    - `visualize_data`
+
+The detailed description of the rules is provided below.
 
 ## Rules and their roles
 
