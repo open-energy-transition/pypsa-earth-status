@@ -9,14 +9,11 @@ The workflow is designed to be:
 
 ## High-level workflow
 
-At a high level, the workflow does:
+At a high level, the workflow does three major actions:
 
-1. **Clean raw datasets** into consistent, analysis-ready tables  
-2. **Build reference statistics** (ground truth) for the selected countries  
-3. **Build network statistics** from the PyPSA network provided by the user  
-4. **Compare** reference vs network statistics and store the results  
-5. **Visualize** the comparison outputs as figures  
-6. Build **transmission network GeoJSON** layers for mapping/inspection
+1. **Create reference statistics** from raw datasets. This section includes data downloading, cleaning and harmonization.
+2. **Extract network statistics** from the user-provided model. This includes reading the input model and parsing the information to numeric inputs that can be compared to the reference data.
+3. **Compare** the reference vs network statistics and generate visualizations.
 
 ## Workflow
 
@@ -29,7 +26,7 @@ snakemake -j 1 visualize_data
 This command triggers the full workflow, starting from raw data cleaning to final figure generation.
 The example described in the quick start guide uses a minimal PyPSA network based on the `scigrid_de` example provided by PyPSA, which is created by the `create_example_DE` rule. The workflow that is being executed is visualized below, where each block denotes a specific Snakemake rule and arrows indicate data dependencies between them.
 
-![PyPSA-Earth-Status workflow DAG](../assets/workflow_dag.png)
+![PyPSA-Earth-Status workflow DAG](workflow_dag.png)
 
 
 ## Rules and their roles

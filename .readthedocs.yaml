@@ -26,8 +26,8 @@ build:
     - git submodule update --init --recursive
     pre_install:
     - pip install mkdocs-material
-    pre_build:
-    - snakemake -j 1 --dag visualize_data | dot -Tpng > doc/assets/workflow_dag.png
+    post_build:
+    - snakemake -j 1 --dag visualize_data | dot -Tpng > doc/user-guide/workflow_dag.png
 
 python:
   install:
