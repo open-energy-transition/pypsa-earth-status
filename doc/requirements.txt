@@ -10,7 +10,7 @@ mkdocstrings-python
 mkdocs-table-reader-plugin
 
 snakemake<8
-glpk
+pulp<2.8
 
 pypsa >=0.25, <=0.30
 vresutils>=0.3.1
