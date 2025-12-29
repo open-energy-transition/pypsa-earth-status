@@ -20,7 +20,7 @@ git clone https://github.com/pypsa-meets-earth/pypsa-earth-status.git --recurse-
 cd pypsa-earth-status
 ```
 
-## Create the Conda environment (step by step)
+## Create the Conda environment
 
 1. Make sure you are in the project folder:
 
