@@ -10,7 +10,7 @@ mkdocs:
 build:
   os: "ubuntu-24.04"
   tools:
-    python: "3"
+    python: "3.12"
   # We recommend using a requirements file for reproducible builds.
   # This is just a quick example to get started.
   # https://docs.readthedocs.io/page/guides/reproducible-builds.html
@@ -23,6 +23,8 @@ build:
     - git fetch --unshallow   # Needed to get version tags
     pre_install:
     - pip install mkdocs-material
+    pre_build:
+    - snakemake -j 1 --dag visualize_data | sed -n '/^digraph snakemake_dag {/,$p' | dot -Tpng > doc/assets/workflow_dag.png
 
 python:
   install:
