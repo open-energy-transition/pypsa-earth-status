@@ -9,7 +9,7 @@ mkdocs-git-revision-date-localized-plugin
 mkdocstrings-python
 mkdocs-table-reader-plugin
 
-snakemake-minimal=7.32.4
+snakemake-minimal<8
 
 pypsa >=0.25, <=0.30
 vresutils>=0.3.1
