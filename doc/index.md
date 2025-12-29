@@ -11,26 +11,49 @@
 
 ## Documentation
 
-**Getting started**
+<div class="grid cards" markdown>
 
-* {doc}`introduction`
+-   :material-clock-fast:{ .lg .middle } **Getting started**
 
-```{toctree}
-:hidden:
-:maxdepth: 2
-:caption: Getting Started
+    ---
 
-introduction
-```
+    [:octicons-arrow-right-24: Installation](home/installation.md)
 
-# Documentation Overview
+    [:octicons-arrow-right-24: Quick Start](home/quick-start.md)
 
-* {doc}`api_reference`
+-   :material-view-list:{ .lg .middle } **User guide**
 
-```{toctree}
-:hidden:
-:maxdepth: 2
-:caption: Workflow and API
+    ---
 
-api_reference
-```
+    [:octicons-arrow-right-24: Features](user-guide/structure.md)
+
+-   :material-new-box:{ .lg .middle } **API reference**
+
+    ---
+
+    The whole API Reference can be found [here](api-reference/api_reference.md).
+
+</div>
+
+## Sections
+
+<div class="grid cards" markdown>
+
+-   :material-bookshelf:{ .lg .middle } **User Guide**
+
+    ---
+
+    Find a detailed description of the PyPSA-Earth-Status **design and architecture** here.
+
+
+    [:octicons-arrow-right-24: User Guide](user-guide.md)
+
+-   :octicons-code-16:{ .lg .middle } **API Reference**
+
+    ---
+
+    The API Reference is generated from the docstrings in the code. It contains a detailed description of **all scripts and functions**, their parameters and how to use them.
+
+    [:octicons-arrow-right-24: API Reference](api-reference/api_reference.md)
+
+</div>
