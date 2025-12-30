@@ -25,13 +25,7 @@
 
     ---
     
-    [:octicons-arrow-right-24: Release notes](release-notes.md)
-
--   :material-new-box:{ .lg .middle } **API reference**
-
-    ---
-    
-    The whole API Reference can be found [here](api-reference/api_reference.md).
+    [:octicons-arrow-right-24: Release notes](release-notes.md).
 
 </div>
 
