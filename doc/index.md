@@ -9,7 +9,7 @@
 *Motivation*. Validating energy system models is crucial for ensuring their accuracy and reliability. However, this process can be time-consuming and complex, often requiring extensive manual effort to compare model outputs with real-world data. PyPSA-Earth-Status addresses this challenge by providing an automated framework for validating energy networks against established energy system statistics, also maintaining up-to-date statistics on the accuracy of PyPSA-Earth.
 
 
-## Documentation
+## Quick Links
 
 <div class="grid cards" markdown>
 
@@ -41,6 +41,14 @@
 
 
     [:octicons-arrow-right-24: User Guide](user-guide/user-guide.md)
+
+-   :fontawesome-solid-users:{ .lg .middle } **Community and how to contribute**
+
+    ---
+
+    Interested in contributing with no-code and/or code? Please, check out the contributing guidelines to learn how to get involved in the project!
+
+    [:octicons-arrow-right-24: Contributing](community/contributing.md)
 
 -   :octicons-code-16:{ .lg .middle } **API Reference**
 
