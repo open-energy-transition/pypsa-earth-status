@@ -15,16 +15,22 @@
 
 -   :material-clock-fast:{ .lg .middle } **Getting started**
 
+    ---
+    
     [:octicons-arrow-right-24: Installation](home/installation.md)
 
     [:octicons-arrow-right-24: Quick Start](home/quick-start.md)
 
 -   :material-view-list:{ .lg .middle } **User guide**
 
+    ---
+    
     [:octicons-arrow-right-24: Features](user-guide/user-guide.md)
 
 -   :material-new-box:{ .lg .middle } **API reference**
 
+    ---
+    
     The whole API Reference can be found [here](api-reference/api_reference.md).
 
 </div>
@@ -35,12 +41,16 @@
 
 -   :material-bookshelf:{ .lg .middle } **User Guide**
 
+    ---
+    
     The following section provides a detailed description of the PyPSA-Earth-Status **design and architecture**.
 
 
     [:octicons-arrow-right-24: User Guide](user-guide/user-guide.md)
 
 -   :octicons-code-16:{ .lg .middle } **API Reference**
+
+    ---
 
     The API Reference is generated from the docstrings in the code. It contains a detailed description of **all scripts and functions**, their parameters and how to use them.
 
