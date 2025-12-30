@@ -21,7 +21,7 @@
 
     [:octicons-arrow-right-24: Quick Start](home/quick-start.md)
 
--   :material-view-list:{ .lg .middle } **Release notes**
+-   :material-new-box:{ .lg .middle } **Release notes**
 
     ---
     
