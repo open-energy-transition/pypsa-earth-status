@@ -8,6 +8,7 @@
 * [Include comparison and plotting features PR #1](https://github.com/pypsa-meets-earth/pypsa-earth-status/pull/1)
 * [Include generation of geojson for network validation PR #3](https://github.com/pypsa-meets-earth/pypsa-earth-status/pull/3)
 * [Finalize workflow, visualization, add CI and documentation PR #6](https://github.com/pypsa-meets-earth/pypsa-earth-status/pull/6)
+* [Add documentation with MkDocs style PR #20](https://github.com/pypsa-meets-earth/pypsa-earth-status/pull/20)
 
 ### Minor Changes and bug-fixing
 
