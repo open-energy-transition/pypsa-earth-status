@@ -9,15 +9,14 @@ You can contribute on the code side in many ways:
 * add new features,
 * report bugs,
 * fix bugs,
-* implement a new cluster/cloud computation backend,
 * write documentation
 
 ## Code
 
 ### Linting and pre-commit
 
-For every code contribution you should run [pre-commit](https://pre-commit.com/index.html).
-This will lint, format and check your code contributions against our guidelines
+For every code contribution, the [pre-commit](https://pre-commit.com/index.html) utility should be executed.
+This will lint, format and check your code contributions against our guidelines to ensure code quality and consistency
 (e.g. we use [Black](https://github.com/psf/black) as code style
 and aim for [REUSE compliance](https://reuse.software/)):
 
@@ -30,15 +29,11 @@ and aim for [REUSE compliance](https://reuse.software/)):
 
 ### How to docs?
 
-We add the code documentation along the way.
-It might seem time-consuming and inefficient, but that's not really true anymore!
-Documenting with great tools makes life much easier for YOU and YOUR COLLABORATORS and speeds up the overall process.
-Using [MkDocs](https://www.mkdocs.org/) and its plugin
-[mkdocstrings](https://mkdocstrings.github.io/) we document in our
-code scripts which then will automatically generate the documentation you might see here.
+We add the documentation continuously while the project grows, which makes it easier to understand and maintain for you and the whole community.
+We rely on [MkDocs](https://www.mkdocs.org/) and its plugin
+[mkdocstrings](https://mkdocstrings.github.io/) to document our scripts and generate the documentation website you are reading.
 
-Thank you Eric Holscher & team for your wonderful *Readthedocs* open source project.
-You can find an emotional speech by Eric [here](https://www.youtube.com/watch?v=U6ueKExLzSY).
+Feel free to check it yourself by starting to contribute. Every typo counts!
 
 ### Structure and Syntax example
 
@@ -56,7 +51,7 @@ We found three important files/file groups for the documentation:
 
 The images for documentation should be placed into [documentation](https://github.com/pypsa-meets-earth/documentation) repository to the folder "doc/img". The content of the folder "documentation/doc/img/" is copied into "pypsa-earth/doc/img/" during building PyPSA-Earth documentation.
 
-Please, if you have problems with the documentation create an issue and let us know
+Please, if you have problems with the documentation create an issue and let us know.
 
 ### How to build it locally
 
@@ -95,8 +90,11 @@ The documentation is built automatically by the CI for every pull request. The d
 ## No-Code
 
 Instead of contributing code there are alternatives to support the PyPSA-Earth-Status goals.
-You can fund projects, supervise people, provide reference data and support us with outreach activities or events.
-Check out our [website](https://pypsa-meets-earth.github.io) for more details.
+You can provide reference data, share suggestions and insights, help fellow modellers asking for assistance in [Discord](https://discord.gg/AnuJBk23FU) Support channel, contribute into outreach activities and events, and fund projects.
+
+Feel free to use [this form](https://docs.google.com/forms/d/1udHf6W34YI0UNg3iwQs_-oeKsyj-dzJOtETZ_-RSUhw/edit) to share
+your insights and check out our [website](https://pypsa-meets-earth.github.io)
+for more details on ways to engage.
 
 ## Join us and get involved
 

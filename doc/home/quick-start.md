@@ -72,4 +72,4 @@ To do so, you just need to edit the `config.yaml` file to point to your network 
     network_validation:
         countries: ["DE", "FR"] # ISO-3166 alpha-2 country codes for the countries in the network
     ```
-   > at least 2 countries must be specified and they shall have at least a network line connecting them. Adding more countries than the necessary ones is possible and is not affecting the validation.
+   > At least 2 countries must be specified and they shall have at least a network line connecting them. Adding more countries than the necessary ones is possible and is not affecting the validation. For example, you can just keep ["DE", "FR"] in countries list while adding countries which belong to your region of interests.

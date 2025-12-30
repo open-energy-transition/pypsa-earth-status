@@ -3,6 +3,7 @@
 PyPSA-Earth-Status is organized around a **Snakemake workflow** that turns raw reference datasets and a user-provided **PyPSA network** into **comparison tables** and **diagnostic figures**.
 
 The workflow is designed to be:
+
 - **Reproducible**: all steps are explicit rules with defined inputs/outputs
 - **Modular**: reference statistics, network statistics, comparisons, and plots are separated
 - **Extensible**: you can add new datasets, metrics, and plots by extending rules and scripts
@@ -31,13 +32,18 @@ The example described in the quick start guide uses a minimal PyPSA network base
 The actions mentioned above are implemented through the following Snakemake rules:
 
 1. **Create reference statistics**
+
     - `create_example_DE` (for the example workflow only)
     - `clean_data`
     - `build_reference_statistics`
+
 2. **Extract network statistics**
+
     - `build_network_statistics`
     - `build_network_geojson`
+
 3. **Compare and visualize**
+
     - `make_comparison`
     - `visualize_data`
 
@@ -47,10 +53,11 @@ The detailed description of the rules is provided below.
 
 ### `create_example_DE`
 
-This rule generates a minimal example PyPSA network based on the `scigrid_de` example provided by PyPSA.  
+This rule generates a minimal example PyPSA network based on the `scigrid_de` example provided by PyPSA.
 It is primarily intended for tutorials and quick-start demonstrations.
 
 **Output:**
+
 - `resources/example_DE.nc`
 
 ### `clean_data`
@@ -58,13 +65,15 @@ It is primarily intended for tutorials and quick-start demonstrations.
 This rule cleans and harmonizes raw external datasets so they can be used consistently throughout the workflow.
 
 **Typical inputs:**
-- Electricity demand data from Our World in Data  
-- Installed capacity data from IRENA  
-- Other optional reference sources  
+
+- Electricity demand data from Our World in Data
+- Installed capacity data from IRENA
+- Other optional reference sources
 
 **Outputs:**
-- Cleaned demand data in `resources/clean/owid_demand_data.csv`  
-- Cleaned capacity data in `resources/clean/irena_capacity_data.csv`  
+
+- Cleaned demand data in `resources/clean/owid_demand_data.csv`
+- Cleaned capacity data in `resources/clean/irena_capacity_data.csv`
 
 The corresponding processing logic is implemented in `scripts/clean_data.py`.
 
@@ -73,11 +82,13 @@ The corresponding processing logic is implemented in `scripts/clean_data.py`.
 This rule constructs authoritative reference statistics representing real-world energy systems for the selected countries.
 
 **Inputs:**
-- Cleaned demand and capacity datasets  
+
+- Cleaned demand and capacity datasets
 
 **Outputs:**
-- Reference demand statistics  
-- Reference installed capacity statistics  
+
+- Reference demand statistics
+- Reference installed capacity statistics
 
 All outputs are written to `resources/reference_statistics/`.
 
@@ -86,12 +97,14 @@ All outputs are written to `resources/reference_statistics/`.
 This rule extracts statistics directly from the user-provided PyPSA network.
 
 **Inputs:**
-- A PyPSA network file (`.nc`) specified in `config.yaml`  
+
+- A PyPSA network file (`.nc`) specified in `config.yaml`
 
 **Outputs:**
-- Demand statistics derived from the network  
-- Installed capacity statistics  
-- Optimized capacity statistics  
+
+- Demand statistics derived from the network
+- Installed capacity statistics
+- Optimized capacity statistics
 
 All outputs are stored in `resources/network_statistics/`.
 
@@ -100,12 +113,14 @@ All outputs are stored in `resources/network_statistics/`.
 This rule creates geographic representations of transmission networks to support spatial comparison and inspection.
 
 It combines:
-- The topology of the user’s PyPSA network  
-- Reference transmission datasets from the Global Transmission Database  
+
+- The topology of the user’s PyPSA network
+- Reference transmission datasets from the Global Transmission Database
 
 **Outputs:**
-- GeoJSON layers for existing and planned reference networks  
-- A GeoJSON representation of the modeled network  
+
+- GeoJSON layers for existing and planned reference networks
+- A GeoJSON representation of the modeled network
 
 These files are written to `resources/reference_statistics/` and `resources/network_statistics/`.
 
@@ -114,12 +129,14 @@ These files are written to `resources/reference_statistics/` and `resources/netw
 This rule aligns and compares reference statistics with network-derived statistics.
 
 **Inputs:**
-- Reference demand and capacity statistics  
-- Network demand, capacity, and topology statistics  
+
+- Reference demand and capacity statistics
+- Network demand, capacity, and topology statistics
 
 **Outputs:**
-- Comparison tables for demand, installed capacity, and optimized capacity  
-- A GeoJSON file highlighting network differences  
+
+- Comparison tables for demand, installed capacity, and optimized capacity
+- A GeoJSON file highlighting network differences
 
 Comparison results are written to the `results/` directory.
 
@@ -130,45 +147,46 @@ This is the final stage of the workflow and the main user-facing entry point.
 It converts comparison tables into figures that highlight discrepancies between the model and real-world data.
 
 **Outputs:**
-- Demand comparison plots  
-- Installed capacity comparison plots  
-- Capacity mix and grid-related figures  
+
+- Demand comparison plots
+- Installed capacity comparison plots
+- Capacity mix and grid-related figures
 
 All figures are stored in `results/figures/`.
 
 ## Directory overview
 
-- `data/`  
-  Raw external datasets as downloaded from original sources  
+- `data/`
+  Raw external datasets as downloaded from original sources
 
-- `resources/clean/`  
-  Cleaned intermediate datasets  
+- `resources/clean/`
+  Cleaned intermediate datasets
 
-- `resources/reference_statistics/`  
-  Reference (“ground truth”) statistics  
+- `resources/reference_statistics/`
+  Reference (“ground truth”) statistics
 
-- `resources/network_statistics/`  
-  Statistics derived from the PyPSA network  
+- `resources/network_statistics/`
+  Statistics derived from the PyPSA network
 
-- `results/tables/`  
-  Final comparison tables  
+- `results/tables/`
+  Final comparison tables
 
-- `results/figures/`  
-  Final visual outputs  
+- `results/figures/`
+  Final visual outputs
 
-- `scripts/`  
-  Python scripts executed by Snakemake rules  
+- `scripts/`
+  Python scripts executed by Snakemake rules
 
-- `logs/`  
-  Log files produced during workflow execution  
+- `logs/`
+  Log files produced during workflow execution
 
 ## Configuration-driven behavior
 
 The workflow is controlled by `config.yaml`, which defines:
 
-- The path to the PyPSA network to validate  
-- The list of countries included in the validation  
-- Optional geographic inputs (e.g. shapefiles)  
-- Which reference datasets are enabled  
+- The path to the PyPSA network to validate
+- The list of countries included in the validation
+- Optional geographic inputs (e.g. shapefiles)
+- Which reference datasets are enabled
 
 Changing the configuration modifies the scope and content of the validation, while the overall workflow structure remains unchanged.

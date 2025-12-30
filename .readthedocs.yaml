@@ -19,7 +19,7 @@ build:
   - graphviz
   - glpk-utils
   - libglpk-dev
-  
+
   jobs:
     pre_system_dependencies:
     - git fetch --unshallow   # Needed to get version tags

@@ -23,39 +23,36 @@ cd pypsa-earth-status
 ## Create the Conda environment
 
 1. Make sure you are in the project folder:
-
    ```bash
-    cd pypsa-earth-status
+   cd pypsa-earth-status
    ```
 
 2. Create the Conda environment using the lock file for your operating system:
-   - Linux (x86_64)
+
+    - Linux (x86_64)
     ```bash
     conda env create -f workflows/pypsa-earth/envs/linux-64.lock.yaml
     ```
-   - macOS (Apple Silicon, arm64 / M1–M3)
+    - macOS (Apple Silicon, arm64 / M1–M3)
     ```bash
     conda env create -f workflows/pypsa-earth/envs/osx-arm64.lock.yaml
     ```
-   - macOS (Intel, x86_64)
+    - macOS (Intel, x86_64)
     ```bash
     conda env create -f workflows/pypsa-earth/envs/osx-64.lock.yaml
     ```
-   - Windows (x86_64)
+    - Windows (x86_64)
     ```bash
     conda env create -f workflows/pypsa-earth/envs/win-64.lock.yaml
     ```
 
 3. Activate the environment:
-
-    ```bash
-    conda activate pypsa-earth
-    ```
+   ```bash
+   conda activate pypsa-earth
+   ```
 
 4. Quick sanity check (optional):
-
-    ```bash
-    snakemake --help
-    ```
-
+   ```bash
+   snakemake --help
+   ```
    If you see the Snakemake help text, the environment is ready.
