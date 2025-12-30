@@ -21,11 +21,11 @@
 
     [:octicons-arrow-right-24: Quick Start](home/quick-start.md)
 
--   :material-view-list:{ .lg .middle } **User guide**
+-   :material-view-list:{ .lg .middle } **Release notes**
 
     ---
     
-    [:octicons-arrow-right-24: Features](user-guide/user-guide.md)
+    [:octicons-arrow-right-24: Release notes](release-notes.md)
 
 -   :material-new-box:{ .lg .middle } **API reference**
 

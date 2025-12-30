@@ -16,6 +16,6 @@ This section provides an overview of how to use **PyPSA-Earth-Status** to valida
 
     Description of the structure of PyPSA-Earth-Status.
 
-    [:material-notebook: Structure](../release_notes.md)
+    [:material-notebook: Structure](../release-notes.md)
 
 </div>

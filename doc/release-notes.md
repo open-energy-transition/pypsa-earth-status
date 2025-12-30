@@ -5,9 +5,14 @@
 
 ### New Features and Major Changes
 
-
+* [Include comparison and plotting features PR #1](https://github.com/pypsa-meets-earth/pypsa-earth-status/pull/1)
+* [Include generation of geojson for network validation PR #3](https://github.com/pypsa-meets-earth/pypsa-earth-status/pull/3)
+* [Finalize workflow, visualization, add CI and documentation PR #6](https://github.com/pypsa-meets-earth/pypsa-earth-status/pull/6)
 
 ### Minor Changes and bug-fixing
+
+* [Add PR template PR #25](https://github.com/pypsa-meets-earth/pypsa-earth-status/pull/25)
+* [Improve README.md PR #27](https://github.com/pypsa-meets-earth/pypsa-earth-status/pull/27)
 
 
 ## Release Process

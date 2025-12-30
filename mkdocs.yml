@@ -27,6 +27,7 @@ nav:
 - User Guide:
   - Overview: user-guide/user-guide.md
   - Structure: user-guide/structure.md
+  - Release notes: release-notes.md
 
 - Community:
   - Overview: community/contributing.md
@@ -152,6 +153,12 @@ plugins:
     data_path: "doc"
     allow_missing_files: false
 - autorefs
+# Global redirects
+- redirects:
+    redirect_maps:
+      'user-guide/release-notes.md': 'release-notes.md'
+      'changelog.md': 'release-notes.md'
+      'whats-new.md': 'release-notes.md'
 
 extra:
   social:

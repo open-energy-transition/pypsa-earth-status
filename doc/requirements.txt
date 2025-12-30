@@ -8,6 +8,7 @@ mkdocs-material
 mkdocs-git-revision-date-localized-plugin
 mkdocstrings-python
 mkdocs-table-reader-plugin
+mkdocs-redirects
 
 snakemake<8
 pulp<2.8
