@@ -22,7 +22,6 @@ build:
 
   jobs:
     pre_system_dependencies:
-    - git fetch --unshallow   # Needed to get version tags
     - git submodule update --init --recursive
     pre_install:
     - pip install mkdocs-material
