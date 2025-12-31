@@ -8,7 +8,7 @@ This section provides an overview of how to use **PyPSA-Earth-Status** to valida
 
     Architecture and main functions of PyPSA-Earth-Status.
 
-    [:material-notebook: Structure](../user-guide/structure.md)
+    [:material-notebook: Architecture](../user-guide/structure.md)
 
 -   :simple-instructure:{ .lg .middle } **Release notes**
 
@@ -16,6 +16,6 @@ This section provides an overview of how to use **PyPSA-Earth-Status** to valida
 
     Check out the latest features, bug fixes and improvements of PyPSA-Earth-Status.
 
-    [:material-notebook: Structure](../release-notes.md)
+    [:material-notebook: Release notes](../release-notes.md)
 
 </div>

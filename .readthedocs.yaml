@@ -27,7 +27,7 @@ build:
     pre_install:
     - pip install mkdocs-material
     post_build:
-    - snakemake -j 1 --dag visualize_data | dot -Tpng > doc/user-guide/workflow_dag.png
+    - snakemake -j 1 --dag visualize_data | dot -Tpng > doc/user-guide/structure/workflow_dag.png
 
 python:
   install:
