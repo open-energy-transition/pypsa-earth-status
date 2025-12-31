@@ -56,6 +56,6 @@
 
     The API Reference is generated from the docstrings in the code. It contains a detailed description of **all scripts and functions**, their parameters and how to use them.
 
-    [:octicons-arrow-right-24: API Reference](api-reference/api_reference.md)
+    [:octicons-arrow-right-24: API Reference](api-reference/api-reference.md)
 
 </div>
