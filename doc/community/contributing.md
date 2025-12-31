@@ -22,8 +22,9 @@ and aim for [REUSE compliance](https://reuse.software/)):
 
 1. Installation `conda install -c conda-forge pre-commit` or `pip install pre-commit`
 2. Usage:
-   * To automatically activate `pre-commit` on every `git commit`: Run `pre-commit install`
-   * To manually run it: `pre-commit run --all`
+
+    * To automatically activate `pre-commit` on every `git commit`: Run `pre-commit install`
+    * To manually run it: `pre-commit run --all`
 
 ## Documentation
 
@@ -103,7 +104,7 @@ A simple way to explore opportunities for collaboration is to join our meetings.
 
 * PyPSA-Earth-Status periodic meeting: Every two weeks on Monday at 16:00 CET/CEST. If interested in joining, we can add you to the calendar invite; just reach out on [Discord](https://discord.gg/AnuJBk23FU) or via email to any of the core developers.
 * [List of initiative meetings](https://pypsa-earth.readthedocs.io/en/latest/#get-involved)
-
 * **Discord**
-  * Chat with the community, team up on features, exchange with developers, code in voice channels
-  * [Discord invitation link](https://discord.gg/AnuJBk23FU)
+
+    * Chat with the community, team up on features, exchange with developers, code in voice channels
+    * [Discord invitation link](https://discord.gg/AnuJBk23FU)

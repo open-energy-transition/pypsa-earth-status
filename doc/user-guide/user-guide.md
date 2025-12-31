@@ -2,11 +2,11 @@ This section provides an overview of how to use **PyPSA-Earth-Status** to valida
 
 <div class="grid cards" markdown>
 
--   :simple-instructure:{ .lg .middle } **Structure**
+-   :simple-instructure:{ .lg .middle } **Architecture**
 
     ---
 
-    Description of the structure of PyPSA-Earth-Status.
+    Architecture and main functions of PyPSA-Earth-Status.
 
     [:material-notebook: Structure](../user-guide/structure.md)
 
@@ -14,7 +14,7 @@ This section provides an overview of how to use **PyPSA-Earth-Status** to valida
 
     ---
 
-    Description of the structure of PyPSA-Earth-Status.
+    Check out the latest features, bug fixes and improvements of PyPSA-Earth-Status.
 
     [:material-notebook: Structure](../release-notes.md)
 
