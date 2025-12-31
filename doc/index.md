@@ -25,7 +25,7 @@
 
     ---
     
-    [:octicons-arrow-right-24: Release notes](release-notes.md).
+    [:octicons-arrow-right-24: Release notes](release-notes.md)
 
 </div>
 
