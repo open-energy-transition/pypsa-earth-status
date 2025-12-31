@@ -5,9 +5,3 @@ API reference for the `scripts.build_network_statistics` module. The module is r
 ## Module
 
 ::: scripts.build_network_statistics
-
-## Functions
-
-### process_network_statistics
-
-::: scripts.build_network_statistics.process_network_statistics
