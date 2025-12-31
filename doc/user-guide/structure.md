@@ -27,7 +27,7 @@ snakemake -j 1 visualize_data
 This command triggers the full workflow, starting from raw data cleaning to final figure generation.
 The example described in the quick start guide uses a minimal PyPSA network based on the `scigrid_de` example provided by PyPSA, which is created by the `create_example_DE` rule. The workflow that is being executed is visualized below, where each block denotes a specific Snakemake rule and arrows indicate data dependencies between them.
 
-![PyPSA-Earth-Status workflow DAG](workflow_dag.png)
+![PyPSA-Earth-Status workflow DAG](../workflow_dag.png)
 
 The actions mentioned above are implemented through the following Snakemake rules:
 
