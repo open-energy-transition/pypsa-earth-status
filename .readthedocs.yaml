@@ -22,11 +22,12 @@ build:
 
   jobs:
     pre_system_dependencies:
-    - git fetch
+    - git fetch --force --all
     - git submodule update --init --recursive
     pre_install:
     - pip install mkdocs-material
     post_build:
+    - mkdir -p doc/user-guide/structure
     - snakemake -j 1 --dag visualize_data | dot -Tpng > doc/user-guide/structure/workflow_dag.png
 
 python:
