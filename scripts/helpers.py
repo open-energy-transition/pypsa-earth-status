@@ -4,8 +4,8 @@ import os
 import sys
 from pathlib import Path
 
-sys.path.append("../workflows/pypsa-earth/scripts")
-sys.path.append("./workflows/pypsa-earth/scripts")
+sys.path.append("../workflows/pypsa-zambia/scripts")
+sys.path.append("./workflows/pypsa-zambia/scripts")
 import _helpers as pe_helpers
 import country_converter as coco
 import geopandas as gpd
@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 import yaml
 
-# Import helpers from pypsa-earth subworkflow
+# Import helpers from pypsa-zambia subworkflow
 handle_exception = pe_helpers.handle_exception
 create_logger = pe_helpers.create_logger
 read_osm_config = pe_helpers.read_osm_config
