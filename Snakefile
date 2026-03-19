@@ -30,9 +30,11 @@ rule clean_data:
         demand_iea="data/WEO2023_AnnexA_Free_Dataset_Regions.csv",  # from https://www.iea.org/data-and-statistics/data-product/world-energy-outlook-2023-free-dataset-2
         cap_irena="data/ELECSTAT_20240808-144258.csv",  # IRENA capacity data from https://pxweb.irena.org/pxweb/en/IRENASTAT/IRENASTAT__Power%20Capacity%20and%20Generation/Country_ELECSTAT_2024_H2.px/
         # other sources
+        osm_lines="workflows/pypsa-zambia/resources/osm/raw/all_raw_lines.geojson", # from PyPSA workflow
     output:
         demand_owid="resources/clean/owid_demand_data.csv",
         cap_irena="resources/clean/irena_capacity_data.csv",
+        osm_lines="resources/clean/osm_lines.geojson"
     log:
         "logs/clean_data.log",
     script:
@@ -123,6 +125,8 @@ rule visualize_data:
         demand_comparison="results/tables/demand.csv",
         installed_capacity_comparison="results/tables/installed_capacity.csv",
         optimal_capacity_comparison="results/tables/optimal_capacity.csv",
+        osm_lines="resources/clean/osm_lines.geojson", 
+        osm_substations="workflows/pypsa-zambia/resources/osm/clean/all_clean_substations.geojson", # from PyPSA workflow
         # energy_dispatch_comparison="results/tables/energy_dispatch.geojson"
         # network_comparison="results/tables/network.geojson"
     output:
@@ -130,6 +134,7 @@ rule visualize_data:
         plot_installed_capacity="results/figures/installed_capacity_comparison.png",
         plot_capacity_mix="results/figures/capacity_mix_comparison.png",
         plot_capacity_grid="results/figures/capacity_grid_comparison.png",
+        plot_grid_network="results/figures/grid_network.png",
     log:
         "logs/visualize_data.log",
     script:

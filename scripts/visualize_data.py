@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
 import pandas as pd
+import geopandas as gpd
 import matplotlib.pyplot as plt
 import matplotlib.pyplot as plt
+import cartopy.io.img_tiles as cimgt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import numpy as np
@@ -20,6 +22,16 @@ colors = [
     "#235ebc",
     "#4adbc8",
     "#f9d002"
+]
+
+# voltage coloring
+voltage_colors = [
+    (0, 50000, "#7c7c7c"),  
+    (51000, 132000, "#deb887"),
+    (132000, 200000, "#FF7F50"),
+    (200001, 310000, "#cd5c5c"),
+    (310001, 550000, "#9400D3"),
+    (550001, 1000000, "#00ced1"),
 ]
 
 def plot_demand_comparison(demand_df, output_path):
@@ -263,6 +275,43 @@ def plot_capacity_grid_comparison(installed_capacity_df, optimal_capacity_df, ou
     plt.savefig(output_path)
     plt.close()
 
+   
+def get_voltage_color(voltage: int) -> str:
+        for lower, upper, color in voltage_colors:
+            if lower <= voltage <= upper:
+                return color
+        return "#000000"     
+
+    
+def plot_grid_network(input, output):
+    """
+    Plot the grid network with lines colored by voltage levels and substations highlighted.
+    """
+    df_lines = gpd.read_file(input["osm_lines"])    
+    df_substations = gpd.read_file(input["osm_substations"])  
+    
+    df_lines['color'] = df_lines['voltage'].apply(get_voltage_color)
+
+    osm_tiles = cimgt.OSM()   
+    
+    fig, ax = plt.subplots(figsize=(12,8), subplot_kw={'projection': osm_tiles.crs})
+    
+    bounds = df_lines.total_bounds
+    ax.set_extent([bounds[0], bounds[2], bounds[1], bounds[3]], crs=ccrs.PlateCarree())
+    ax.add_image(osm_tiles, 8)
+    
+    # loop by color group so each line is plotted with its corresponding color
+    for color, group in df_lines.groupby('color'):
+        ax.add_geometries(group.geometry, crs=ccrs.PlateCarree(), edgecolor=color, facecolor='none', linewidth=1, zorder=2)
+        
+    ax.scatter(df_substations.geometry.x, df_substations.geometry.y, color='red', s=5, zorder=3, transform=ccrs.PlateCarree())
+    
+    ax.set_title("Grid Network")
+    ax.set_axis_off()
+    plt.tight_layout()
+    plt.savefig(output, dpi=150, bbox_inches='tight')
+    plt.close()
+
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
@@ -288,3 +337,5 @@ if __name__ == "__main__":
     plot_stack_carrier_capacity_comparison(installed_capacity_comparison, optimal_capacity_comparison, snakemake.output['plot_capacity_mix'], stack_percent=False)
 
     plot_capacity_grid_comparison(installed_capacity_comparison, optimal_capacity_comparison, snakemake.output['plot_capacity_grid'], normalize=False, share_y=False)
+    
+    plot_grid_network(snakemake.input, snakemake.output['plot_grid_network'])
