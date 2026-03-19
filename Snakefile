@@ -14,6 +14,7 @@ from helpers import create_country_list
 
 configfile: "config.yaml"
 
+
 rule clean:
     run:
         try:
@@ -30,11 +31,11 @@ rule clean_data:
         demand_iea="data/WEO2023_AnnexA_Free_Dataset_Regions.csv",  # from https://www.iea.org/data-and-statistics/data-product/world-energy-outlook-2023-free-dataset-2
         cap_irena="data/ELECSTAT_20240808-144258.csv",  # IRENA capacity data from https://pxweb.irena.org/pxweb/en/IRENASTAT/IRENASTAT__Power%20Capacity%20and%20Generation/Country_ELECSTAT_2024_H2.px/
         # other sources
-        osm_lines="workflows/pypsa-zambia/resources/osm/raw/all_raw_lines.geojson", # from PyPSA workflow
+        osm_lines="workflows/pypsa-zambia/resources/osm/raw/all_raw_lines.geojson",  # from PyPSA workflow
     output:
         demand_owid="resources/clean/owid_demand_data.csv",
         cap_irena="resources/clean/irena_capacity_data.csv",
-        osm_lines="resources/clean/osm_lines.geojson"
+        osm_lines="resources/clean/osm_lines.geojson",
     log:
         "logs/clean_data.log",
     script:
@@ -46,7 +47,7 @@ rule build_network_geojson:
         buscodes="data/electricity-transmission-database/Input - Center points.csv",
         lineexist="data/electricity-transmission-database/GTD-v1.1_regional_existing.csv",
         lineplan="data/electricity-transmission-database/GTD-v1.1_regional_planned.csv",
-        network_path=config["network_validation"]["network_path"], 
+        network_path=config["network_validation"]["network_path"],
     params:
         countries=config["network_validation"]["countries"],
         shapefile=config["network_validation"].get("shapefile", False),
@@ -81,7 +82,7 @@ rule build_network_statistics:
     params:
         network=config["network_validation"],
     input:
-        network_path=config["network_validation"]["network_path"]
+        network_path=config["network_validation"]["network_path"],
         # other sources
     output:
         demand="resources/network_statistics/demand.csv",
@@ -125,8 +126,8 @@ rule visualize_data:
         demand_comparison="results/tables/demand.csv",
         installed_capacity_comparison="results/tables/installed_capacity.csv",
         optimal_capacity_comparison="results/tables/optimal_capacity.csv",
-        osm_lines="resources/clean/osm_lines.geojson", 
-        osm_substations="workflows/pypsa-zambia/resources/osm/clean/all_clean_substations.geojson", # from PyPSA workflow
+        osm_lines="resources/clean/osm_lines.geojson",
+        osm_substations="workflows/pypsa-zambia/resources/osm/clean/all_clean_substations.geojson",  # from PyPSA workflow
         # energy_dispatch_comparison="results/tables/energy_dispatch.geojson"
         # network_comparison="results/tables/network.geojson"
     output:
@@ -140,13 +141,15 @@ rule visualize_data:
     script:
         "scripts/visualize_data.py"
 
+
 rule create_example_DE:
     output:
-        "resources/example_DE.nc"
+        "resources/example_DE.nc",
     log:
         "logs/create_example_DE.log",
     run:
         import pypsa
+
         n = pypsa.examples.scigrid_de()
         n.buses["country"] = "DE"
         n.export_to_netcdf(output[0])
