@@ -14,3 +14,4 @@ network_validation:
   year: [2021]  # year of the network to validate
   countries: ['DE', 'FR']  # country of the network to validate
   shapefile: False
+  validate_cross_border_capacity: true # validation of cross border capacity
