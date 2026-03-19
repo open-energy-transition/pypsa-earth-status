@@ -304,4 +304,5 @@ if __name__ == "__main__":
         export_network_lines_to_geojson(agg_model, output_model)
     else:
         export_network_lines_to_geojson(pypsa.Network(), output_model)
+        
     
