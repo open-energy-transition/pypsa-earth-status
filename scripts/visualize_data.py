@@ -489,8 +489,8 @@ def plot_grid_network(input, output):
 
     fig, ax = plt.subplots(figsize=(12, 8), subplot_kw={"projection": osm_tiles.crs})
 
-    bounds = df_lines.total_bounds
-    ax.set_extent([bounds[0], bounds[2], bounds[1], bounds[3]], crs=ccrs.PlateCarree())
+    minx, miny, maxx, maxy = df_lines.total_bounds
+    ax.set_extent([minx, maxx, miny, maxy], crs=ccrs.PlateCarree())
     ax.add_image(osm_tiles, 8)
 
     # loop by color group so each line is plotted with its corresponding color
