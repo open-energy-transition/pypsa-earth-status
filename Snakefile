@@ -126,8 +126,9 @@ rule visualize_data:
         demand_comparison="results/tables/demand.csv",
         installed_capacity_comparison="results/tables/installed_capacity.csv",
         optimal_capacity_comparison="results/tables/optimal_capacity.csv",
-        osm_lines="resources/clean/osm_lines.geojson",
+        osm_lines="workflows/pypsa-zambia/resources/osm/clean/all_clean_lines.geojson",
         osm_substations="workflows/pypsa-zambia/resources/osm/clean/all_clean_substations.geojson",  # from PyPSA workflow
+        voltage_colors=config["voltage_colors"],
         # energy_dispatch_comparison="results/tables/energy_dispatch.geojson"
         # network_comparison="results/tables/network.geojson"
     output:

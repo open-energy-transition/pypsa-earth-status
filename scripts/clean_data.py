@@ -93,35 +93,6 @@ def get_installed_capacity_irena(inputs, outputs):
     to_csv_nafix(df_irena, fp_output)
 
 
-def clean_raw_osm_lines(inputs, outputs):
-    """
-    Clean the raw OSM data taken from the PyPSA workflow resources
-    """
-    fp_input = inputs.get("osm_lines")
-    if fp_input is None or not os.path.exists(fp_input):
-        return
-
-    column_mapping = {
-        "Region": "region",
-        "tags.power": "power",
-        "tags.voltage": "voltage",
-        "tags.circuits": "circuits",
-        "tags.cables": "cables",
-        "tags.frequency": "frequency",
-    }
-    cols = ["voltage", "circuits", "cables", "frequency"]
-
-    fp_output = outputs["osm_lines"]
-    df_osm = gpd.read_file(fp_input)
-    df_osm["Region"] = df_osm["Region"].apply(three_2_two_digits_country)
-    df_osm.rename(columns=column_mapping, inplace=True)
-
-    # Fill missing values with 0
-    fill_cols = [c for c in cols if c in df_osm.columns]
-    df_osm[fill_cols] = df_osm[fill_cols].fillna(0)
-    df_osm.to_file(fp_output, driver="GeoJSON")
-
-
 if __name__ == "__main__":
     if "snakemake" not in globals():
         os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -134,5 +105,3 @@ if __name__ == "__main__":
     get_demand_ourworldindata(snakemake.input, snakemake.output)
 
     get_installed_capacity_irena(snakemake.input, snakemake.output)
-
-    clean_raw_osm_lines(snakemake.input, snakemake.output)

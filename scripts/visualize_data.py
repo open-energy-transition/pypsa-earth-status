@@ -22,16 +22,6 @@ colors = [
     "#f9d002",
 ]
 
-# voltage coloring
-voltage_colors = [
-    (0, 50000, "#7c7c7c"),
-    (51000, 132000, "#deb887"),
-    (132000, 200000, "#FF7F50"),
-    (200001, 310000, "#cd5c5c"),
-    (310001, 550000, "#9400D3"),
-    (550001, 1000000, "#00ced1"),
-]
-
 
 def plot_demand_comparison(demand_df, output_path):
     """
@@ -469,21 +459,25 @@ def plot_capacity_grid_comparison(
     plt.close()
 
 
-def get_voltage_color(voltage: int) -> str:
-    for lower, upper, color in voltage_colors:
-        if lower <= voltage <= upper:
-            return color
+def get_voltage_color(voltage: float, voltage_colors: list) -> str:
+    for entry in voltage_colors:
+        if entry["lower"] <= voltage <= entry["upper"]:
+            return entry["color"]
     return "#000000"
 
 
-def plot_grid_network(input, output):
+def plot_grid_network(
+    input: dict[str, str], output: dict[str, str], config: dict
+) -> None:
     """
     Plot the grid network with lines colored by voltage levels and substations highlighted.
     """
     df_lines = gpd.read_file(input["osm_lines"])
     df_substations = gpd.read_file(input["osm_substations"])
 
-    df_lines["color"] = df_lines["voltage"].apply(get_voltage_color)
+    df_lines["color"] = df_lines["voltage"].apply(
+        lambda x: get_voltage_color(x, config["voltage_colors"])
+    )
 
     osm_tiles = cimgt.OSM()
 
@@ -504,6 +498,30 @@ def plot_grid_network(input, output):
             zorder=2,
         )
 
+    # circuit values on the plot if available, positioned at the midpoint of each line
+    if "circuits" in df_lines.columns:
+        for _, row in df_lines.iterrows():
+            if pd.notna(row["circuits"]):
+                midpoint = row.geometry.interpolate(0.5, normalized=True)
+                ax.text(
+                    midpoint.x,
+                    midpoint.y,
+                    str(int(row["circuits"])),
+                    fontsize=6,
+                    color="black",
+                    ha="center",
+                    va="center",
+                    fontweight="bold",
+                    zorder=4,
+                    transform=ccrs.PlateCarree(),
+                    bbox=dict(
+                        boxstyle="round, pad=0.1",
+                        facecolor="white",
+                        edgecolor="none",
+                        alpha=0.5,
+                    ),
+                )
+
     ax.scatter(
         df_substations.geometry.x,
         df_substations.geometry.y,
@@ -513,7 +531,7 @@ def plot_grid_network(input, output):
         transform=ccrs.PlateCarree(),
     )
 
-    ax.set_title("Grid Network")
+    ax.set_title("Grid Network as Presented in OSM Data", fontsize=14)
     ax.set_axis_off()
     plt.tight_layout()
     plt.savefig(output, dpi=150, bbox_inches="tight")
@@ -565,4 +583,6 @@ if __name__ == "__main__":
         share_y=False,
     )
 
-    plot_grid_network(snakemake.input, snakemake.output["plot_grid_network"])
+    plot_grid_network(
+        snakemake.input, snakemake.output["plot_grid_network"], snakemake.config
+    )

@@ -13,4 +13,24 @@ network_validation:
   network_path: "/home/mwiche/pypsa-earth-status/workflows/pypsa-zambia/networks/elec_s_10_ec_lcopt_Co2L-3h.nc" # File to the PyPSA network file to validate
   year: [2021]  # year of the network to validate
   countries: ['ZM', 'ZW', 'TZ', 'MZ', 'MW', 'CD', 'AO', 'BW', 'NA']  # country of the network to validate
-  shapefile: False
+  shapefile: false
+
+voltage_colors: # (lower_bound, upper_bound, color) tuples for coloring lines by voltage levels
+- lower: 0
+  upper: 50000
+  color: "#7c7c7c"
+- lower: 51000
+  upper: 132000
+  color: "#deb887"
+- lower: 132000
+  upper: 200000
+  color: "#FF7F50"
+- lower: 200001
+  upper: 310000
+  color: "#cd5c5c"
+- lower: 310001
+  upper: 550000
+  color: "#9400D3"
+- lower: 550001
+  upper: 1000000
+  color: "#00ced1"
