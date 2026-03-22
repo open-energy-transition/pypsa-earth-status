@@ -31,7 +31,7 @@ rule clean_data:
         demand_iea="data/WEO2023_AnnexA_Free_Dataset_Regions.csv",  # from https://www.iea.org/data-and-statistics/data-product/world-energy-outlook-2023-free-dataset-2
         cap_irena="data/ELECSTAT_20240808-144258.csv",  # IRENA capacity data from https://pxweb.irena.org/pxweb/en/IRENASTAT/IRENASTAT__Power%20Capacity%20and%20Generation/Country_ELECSTAT_2024_H2.px/
         # other sources
-        osm_lines="workflows/pypsa-zambia/resources/osm/raw/all_raw_lines.geojson",  # from PyPSA workflow
+        osm_lines="workflows/pypsa-earth/resources/osm/raw/all_raw_lines.geojson",  # from PyPSA workflow
     output:
         demand_owid="resources/clean/owid_demand_data.csv",
         cap_irena="resources/clean/irena_capacity_data.csv",
@@ -127,8 +127,8 @@ rule visualize_data:
         demand_comparison="results/tables/demand.csv",
         installed_capacity_comparison="results/tables/installed_capacity.csv",
         optimal_capacity_comparison="results/tables/optimal_capacity.csv",
-        osm_lines="workflows/pypsa-zambia/resources/osm/clean/all_clean_lines.geojson",
-        osm_substations="workflows/pypsa-zambia/resources/osm/clean/all_clean_substations.geojson",  # from PyPSA workflow
+        osm_lines="workflows/pypsa-earth/resources/osm/clean/all_clean_lines.geojson",
+        osm_substations="workflows/pypsa-earth/resources/osm/clean/all_clean_substations.geojson",  # from PyPSA workflow
         voltage_colors=config["voltage_colors"],
         # energy_dispatch_comparison="results/tables/energy_dispatch.geojson"
         # network_comparison="results/tables/network.geojson"
