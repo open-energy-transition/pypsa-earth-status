@@ -137,6 +137,7 @@ rule visualize_data:
         plot_capacity_mix="results/figures/capacity_mix_comparison.png",
         plot_capacity_grid="results/figures/capacity_grid_comparison.png",
         plot_grid_network="results/figures/grid_network.png",
+        line_length_by_voltage="results/tables/line_length_by_voltage.csv",
     log:
         "logs/visualize_data.log",
     script:

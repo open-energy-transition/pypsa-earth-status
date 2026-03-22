@@ -538,6 +538,23 @@ def plot_grid_network(
     plt.close()
 
 
+def compute_line_lengths_by_voltage(
+    input: dict[str, str], output: dict[str, str]
+) -> None:
+    """
+    Compute total line lengths by voltage level and save to CSV.
+    """
+    df_lines = gpd.read_file(input["osm_lines"])
+
+    df_lines = df_lines.to_crs(epsg=3857)
+
+    df_lines["length_km"] = df_lines.geometry.length / 1000
+    length_by_voltage = (
+        df_lines.groupby("voltage")["length_km"].sum().round(2).reset_index()
+    )
+    length_by_voltage.to_csv(output["line_length_by_voltage"], index=False)
+
+
 if __name__ == "__main__":
     if "snakemake" not in globals():
         os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -586,3 +603,5 @@ if __name__ == "__main__":
     plot_grid_network(
         snakemake.input, snakemake.output["plot_grid_network"], snakemake.config
     )
+
+    compute_line_lengths_by_voltage(snakemake.input, snakemake.output)
