@@ -10,7 +10,7 @@ datasets:
   # network: []  # list of datasets sources to validate networks. Not yet supported
 
 network_validation:
-  network_path: "/home/mwiche/pypsa-earth-status/workflows/pypsa-earth/networks/elec_s_10_ec_lcopt_Co2L-3h.nc" # File to the PyPSA network file to validate
+  network_path: "resources/example_DE.nc" # File to the PyPSA network file to validate
   year: [2021]  # year of the network to validate
   countries: ['DE', 'FR']  # country of the network to validate
   shapefile: False
