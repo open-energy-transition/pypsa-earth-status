@@ -10,10 +10,11 @@ datasets:
   # network: []  # list of datasets sources to validate networks. Not yet supported
 
 network_validation:
-  network_path: "/home/mwiche/pypsa-earth-status/workflows/pypsa-zambia/networks/elec_s_10_ec_lcopt_Co2L-3h.nc" # File to the PyPSA network file to validate
+  network_path: "/home/mwiche/pypsa-earth-status/workflows/pypsa-earth/networks/elec_s_10_ec_lcopt_Co2L-3h.nc" # File to the PyPSA network file to validate
   year: [2021]  # year of the network to validate
-  countries: ['ZM', 'ZW', 'TZ', 'MZ', 'MW', 'CD', 'AO', 'BW', 'NA']  # country of the network to validate
-  shapefile: false
+  countries: ['DE', 'FR']  # country of the network to validate
+  shapefile: False
+  validate_cross_border_capacity: true # validation of cross border capacity
 
 voltage_colors: # (lower_bound, upper_bound, color) tuples for coloring lines by voltage levels
 - lower: 0
