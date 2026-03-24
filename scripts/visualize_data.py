@@ -459,7 +459,9 @@ def plot_capacity_grid_comparison(
     plt.close()
 
 
-def get_voltage_color(voltage: float, line_voltages: list[float], voltage_colors: list[str]) -> str:
+def get_voltage_color(
+    voltage: float, line_voltages: list[float], voltage_colors: list[str]
+) -> str:
     """
     Get the line colors corresponding to a voltage level based on defined thresholds.
     """
@@ -470,7 +472,11 @@ def get_voltage_color(voltage: float, line_voltages: list[float], voltage_colors
 
 
 def plot_grid_network(
-    input: dict[str, str], output: str, line_voltages: list[float], voltage_colors: list[str], plot_circuits: bool
+    input: dict[str, str],
+    output: str,
+    line_voltages: list[float],
+    voltage_colors: list[str],
+    plot_circuits: bool,
 ) -> None:
     """
     Plot the grid network with lines colored by voltage levels and substations highlighted.
