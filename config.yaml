@@ -17,15 +17,13 @@ network_validation:
   validate_cross_border_capacity: true # validation of cross border capacity
 
 voltage_colors: # (max, color) tuples for coloring lines by voltage levels
-- max: 50000
-  color: "#7c7c7c"
 - max: 132000
   color: "#deb887"
 - max: 200000
   color: "#FF7F50"
-- max: 310000
+- max: 300000
   color: "#cd5c5c"
 - max: 550000
   color: "#9400D3"
-- max: 1000000
+- max: 750000
   color: "#00ced1"
