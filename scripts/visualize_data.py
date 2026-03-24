@@ -459,18 +459,18 @@ def plot_capacity_grid_comparison(
     plt.close()
 
 
-def get_voltage_color(voltage: float, voltage_colors: list) -> str:
+def get_voltage_color(voltage: float, line_voltages: list[float], voltage_colors: list[str]) -> str:
     """
     Get the line colors corresponding to a voltage level based on defined thresholds.
     """
-    for entry in voltage_colors:
-        if voltage <= entry["max"]:
-            return entry["color"]
+    for threshold, color in zip(line_voltages, voltage_colors):
+        if voltage <= threshold:
+            return color
     return "#000000"
 
 
 def plot_grid_network(
-    input: dict[str, str], output: str, voltage_colors: list, show_circuits: bool = True
+    input: dict[str, str], output: str, line_voltages: list[float], voltage_colors: list[str], plot_circuits: bool
 ) -> None:
     """
     Plot the grid network with lines colored by voltage levels and substations highlighted.
@@ -481,19 +481,21 @@ def plot_grid_network(
         A dictionary containing paths to input files, specifically:
         - "osm_lines": Path to the GeoJSON file containing line geometries and attributes.
         - "osm_substations": Path to the GeoJSON file containing substation geometries.
-    output: dict[str, str]
+    output: str
         A dictionary containing paths to output files, specifically:
         - "plot_grid_network": Path where the generated grid network plot will be saved (e.g., as a PNG file).
-    voltage_colors: list
-        A list of dictionaries defining voltage thresholds and corresponding colors
-    show_circuits: bool
+    line_voltages: list[float]
+        A list of voltage thresholds used to categorize lines into different voltage levels for coloring.
+    voltage_colors: list[str]
+        A list of colors corresponding to each voltage level in line_voltages.
+    plot_circuits: bool
         Whether to display the number of circuits on the plot.
     """
     df_lines = gpd.read_file(input["osm_lines"])
     df_substations = gpd.read_file(input["osm_substations"])
 
     df_lines["color"] = df_lines["voltage"].apply(
-        lambda x: get_voltage_color(x, voltage_colors)
+        lambda x: get_voltage_color(x / 1000, line_voltages, voltage_colors)
     )
 
     osm_tiles = cimgt.OSM()
@@ -516,7 +518,7 @@ def plot_grid_network(
         )
 
     # circuit values on the plot if available, positioned at the midpoint of each line
-    if show_circuits and "circuits" in df_lines.columns:
+    if plot_circuits and "circuits" in df_lines.columns:
         for _, row in df_lines.iterrows():
             if pd.notna(row["circuits"]):
                 midpoint = row.geometry.interpolate(0.5, normalized=True)
@@ -629,8 +631,9 @@ if __name__ == "__main__":
     plot_grid_network(
         snakemake.input,
         snakemake.output["plot_grid_network"],
-        voltage_colors=snakemake.config["voltage_colors"],
-        show_circuits=True,
+        line_voltages=snakemake.params["line_voltages"],
+        voltage_colors=snakemake.params["voltage_colors"],
+        plot_circuits=snakemake.params["plot_circuits"],
     )
 
     compute_line_lengths_by_voltage(snakemake.input, snakemake.output)
