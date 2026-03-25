@@ -127,8 +127,8 @@ rule visualize_data:
         demand_comparison="results/tables/demand.csv",
         installed_capacity_comparison="results/tables/installed_capacity.csv",
         optimal_capacity_comparison="results/tables/optimal_capacity.csv",
-        osm_lines="workflows/pypsa-earth/resources/osm/clean/all_clean_lines.geojson",
-        osm_substations="workflows/pypsa-earth/resources/osm/clean/all_clean_substations.geojson",  # from PyPSA workflow
+        osm_lines=os.path.join(config["plot_osm_grid_network"]["grid_path"], "all_clean_lines.geojson"),
+        osm_substations=os.path.join(config["plot_osm_grid_network"]["grid_path"], "all_clean_substations.geojson"),
         # energy_dispatch_comparison="results/tables/energy_dispatch.geojson"
         # network_comparison="results/tables/network.geojson"
     output:
