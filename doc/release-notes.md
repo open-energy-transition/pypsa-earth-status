@@ -6,11 +6,17 @@
 
 * [Add `validate_cross_border_capacity` to `network_validation` config so cross-border capacity checks can be disabled when building network validation GeoJSON outputs PR #36](https://github.com/pypsa-meets-earth/pypsa-earth-status/pull/33)
 
+* Added plot OSM electrical grid network including, optionally, circuit values with flexible customisation of line colors
+* csv export of osm grid line voltages and their lengths
+* Flexible approach towards selecting path of osm input file for either testing or running the workflow.
+
+
 ### Minor Changes and bug-fixing
 
 * [Add Read the Docs badge to README.md PR #35](https://github.com/pypsa-meets-earth/pypsa-earth-status/pull/35)
-
 * [Handle empty networks and make validation plots robust to missing data PR #34](https://github.com/pypsa-meets-earth/pypsa-earth-status/pull/34)
+* Improved code formatting across the repo
+* fixed breaking ci tests introduced missing files that led to constant ci fails
 
 ## Version v0.0.1 - Initial Release
 
