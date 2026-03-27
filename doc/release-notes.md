@@ -6,6 +6,8 @@
 
 * [Add `validate_cross_border_capacity` to `network_validation` config so cross-border capacity checks can be disabled when building network validation GeoJSON outputs PR #36](https://github.com/pypsa-meets-earth/pypsa-earth-status/pull/33)
 
+* [Add functionality to plot OSM electrical grid network plus circuit values and csv export of osm grid line voltages and their lengths PR #38](https://github.com/pypsa-meets-earth/pypsa-earth-status/pull/38)
+
 ### Minor Changes and bug-fixing
 
 * [Add Read the Docs badge to README.md PR #35](https://github.com/pypsa-meets-earth/pypsa-earth-status/pull/35)
