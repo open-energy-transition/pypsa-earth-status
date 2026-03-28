@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: CC0-1.0
+-->
+
 # PyPSA-Earth-Status: validating any PyPSA network on Earth
 
 ## Development Status: **under development**

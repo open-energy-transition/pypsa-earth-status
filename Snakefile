@@ -14,6 +14,7 @@ from helpers import create_country_list
 
 configfile: "config.yaml"
 
+
 rule clean:
     run:
         try:
@@ -23,8 +24,6 @@ rule clean:
 
 
 rule clean_data:
-    params:
-        datasets=config["datasets"],
     input:
         demand_owid="data/owid-energy-data.csv",  # from https://nyc3.digitaloceanspaces.com/owid-public/data/energy/owid-energy-data.csv
         demand_iea="data/WEO2023_AnnexA_Free_Dataset_Regions.csv",  # from https://www.iea.org/data-and-statistics/data-product/world-energy-outlook-2023-free-dataset-2
@@ -35,6 +34,8 @@ rule clean_data:
         cap_irena="resources/clean/irena_capacity_data.csv",
     log:
         "logs/clean_data.log",
+    params:
+        datasets=config["datasets"],
     script:
         "scripts/clean_data.py"
 
@@ -44,24 +45,24 @@ rule build_network_geojson:
         buscodes="data/electricity-transmission-database/Input - Center points.csv",
         lineexist="data/electricity-transmission-database/GTD-v1.1_regional_existing.csv",
         lineplan="data/electricity-transmission-database/GTD-v1.1_regional_planned.csv",
-        network_path=config["network_validation"]["network_path"], 
-    params:
-        countries=config["network_validation"]["countries"],
-        shapefile=config["network_validation"].get("shapefile", False),
-        validate_cross_border_capacity=config["network_validation"].get("validate_cross_border_capacity", True),
+        network_path=config["network_validation"]["network_path"],
     output:
         network_existing="resources/reference_statistics/network_exist.geojson",
         network_planned="resources/reference_statistics/network_planned.geojson",
         network_model="resources/network_statistics/network_model.geojson",
     log:
         "logs/build_network_geojson.log",
+    params:
+        countries=config["network_validation"]["countries"],
+        shapefile=config["network_validation"].get("shapefile", False),
+        validate_cross_border_capacity=config["network_validation"].get(
+            "validate_cross_border_capacity", True
+        ),
     script:
         "scripts/build_network_geojson.py"
 
 
 rule build_reference_statistics:
-    params:
-        datasets=config["datasets"],
     input:
         demand_owid="resources/clean/owid_demand_data.csv",
         cap_irena="resources/clean/irena_capacity_data.csv",
@@ -72,15 +73,15 @@ rule build_reference_statistics:
         # energy_dispatch="resources/reference_statistics/energy_dispatch.geojson"
     log:
         "logs/build_reference_statistics.log",
+    params:
+        datasets=config["datasets"],
     script:
         "scripts/build_reference_statistics.py"
 
 
 rule build_network_statistics:
-    params:
-        network=config["network_validation"],
     input:
-        network_path=config["network_validation"]["network_path"]
+        network_path=config["network_validation"]["network_path"],
         # other sources
     output:
         demand="resources/network_statistics/demand.csv",
@@ -90,6 +91,8 @@ rule build_network_statistics:
         # network="resources/network_statistics/network.geojson",
     log:
         "logs/build_network_statistics.log",
+    params:
+        network=config["network_validation"],
     script:
         "scripts/build_network_statistics.py"
 
@@ -124,6 +127,8 @@ rule visualize_data:
         demand_comparison="results/tables/demand.csv",
         installed_capacity_comparison="results/tables/installed_capacity.csv",
         optimal_capacity_comparison="results/tables/optimal_capacity.csv",
+        osm_lines=os.path.join(config["plot_osm_grid_network"]["grid_path"], "all_clean_lines.geojson"),
+        osm_substations=os.path.join(config["plot_osm_grid_network"]["grid_path"], "all_clean_substations.geojson"),
         # energy_dispatch_comparison="results/tables/energy_dispatch.geojson"
         # network_comparison="results/tables/network.geojson"
     output:
@@ -131,18 +136,26 @@ rule visualize_data:
         plot_installed_capacity="results/figures/installed_capacity_comparison.png",
         plot_capacity_mix="results/figures/capacity_mix_comparison.png",
         plot_capacity_grid="results/figures/capacity_grid_comparison.png",
+        plot_grid_network="results/figures/grid_network.png",
+        line_length_by_voltage="results/tables/line_length_by_voltage.csv",
     log:
         "logs/visualize_data.log",
+    params:
+        line_voltages=config["plot_osm_grid_network"]["line_voltages"],
+        voltage_colors=config["plot_osm_grid_network"]["voltage_colors"],
+        plot_circuits=config["plot_osm_grid_network"]["plot_circuits"],
     script:
         "scripts/visualize_data.py"
 
+
 rule create_example_DE:
     output:
-        "resources/example_DE.nc"
+        "resources/example_DE.nc",
     log:
         "logs/create_example_DE.log",
     run:
         import pypsa
+
         n = pypsa.examples.scigrid_de()
         n.buses["country"] = "DE"
         n.export_to_netcdf(output[0])

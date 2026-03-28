@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 # -*- coding: utf-8 -*-
 """
 
@@ -8,6 +10,7 @@ This script cleans raw statistics data from different sources, to build statisti
 import os
 
 import country_converter as coco
+import geopandas as gpd
 import pandas as pd
 from helpers import (
     configure_logging,
@@ -19,6 +22,7 @@ from helpers import (
 
 cc = coco.CountryConverter()
 
+
 def get_demand_ourworldindata(inputs, outputs):
     """
     Retrieve the electricity demand data from Our World in Data
@@ -29,9 +33,10 @@ def get_demand_ourworldindata(inputs, outputs):
     df = df.loc[:, ["iso_code", "year", "electricity_demand"]]
     df = df[df["iso_code"].notna()]  # removes antartica
     df["region"] = cc.pandas_convert(df["iso_code"], to="ISO2")
-    df = df[["region","year","electricity_demand"]]
+    df = df[["region", "year", "electricity_demand"]]
     df = df.set_index("region")
     to_csv_nafix(df, fp_output)
+
 
 def clean_capacity_IRENA(df_irena):
     """
@@ -44,12 +49,8 @@ def clean_capacity_IRENA(df_irena):
         df["Technology"].isin(["Solar photovoltaic", "Solar thermal energy"]),
         "Technology",
     ] = "solar"
-    df.loc[df["Technology"].isin(["Onshore wind energy"]), "Technology"] = (
-        "onwind"
-    )
-    df.loc[df["Technology"].isin(["Offshore wind energy"]), "Technology"] = (
-        "offwind-dc"
-    )
+    df.loc[df["Technology"].isin(["Onshore wind energy"]), "Technology"] = "onwind"
+    df.loc[df["Technology"].isin(["Offshore wind energy"]), "Technology"] = "offwind-dc"
     df.loc[
         df["Technology"].isin(
             ["Renewable hydropower", "Mixed Hydro Plants", "Pumped storage"]
@@ -71,9 +72,12 @@ def clean_capacity_IRENA(df_irena):
     df.loc[df["Technology"].isin(["Oil", "Fossil fuels n.e.s."]), "Technology"] = "oil"
 
     df["p_nom"] = pd.to_numeric(df["Electricity statistics (MW/GWh)"], errors="coerce")
-    installed_capacity_irena = df[~df["Technology"].isin(["Total Renewable","Total Non-Renewable"])]
+    installed_capacity_irena = df[
+        ~df["Technology"].isin(["Total Renewable", "Total Non-Renewable"])
+    ]
 
     return installed_capacity_irena
+
 
 def get_installed_capacity_irena(inputs, outputs):
     """
@@ -86,9 +90,10 @@ def get_installed_capacity_irena(inputs, outputs):
     # df = df[df["iso_code"].notna()]  # removes antartica
     df_irena["region"] = cc.pandas_convert(df_irena["Country/area"], to="ISO2")
     df_irena = clean_capacity_IRENA(df_irena)
-    df_irena = df_irena[["region","Technology","Year","p_nom"]]
+    df_irena = df_irena[["region", "Technology", "Year", "p_nom"]]
     df_irena = df_irena.set_index("region")
     to_csv_nafix(df_irena, fp_output)
+
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
