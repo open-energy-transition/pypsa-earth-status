@@ -112,8 +112,8 @@ def plot_carrier_capacity_comparison(
         installed_capacity_df["carrier"] == carrier
     ]
     optimal_capacity_df = optimal_capacity_df[optimal_capacity_df["carrier"] == carrier]
-    reference_capacity_df = installed_capacity_df[
-        installed_capacity_df["carrier"] == carrier
+    reference_capacity_df = optimal_capacity_df[
+        optimal_capacity_df["carrier"] == carrier
     ]
 
     # Merge the dataframes
