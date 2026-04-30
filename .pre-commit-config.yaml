@@ -50,7 +50,11 @@ repos:
   - id: blackdoc
 
 # Formatting with "black" coding style
+<<<<<<< HEAD
 - repo: https://github.com/psf/black
+=======
+- repo: https://github.com/psf/black-pre-commit-mirror
+>>>>>>> upstream/main
   rev: 26.3.1
   hooks:
   # Format Python files
@@ -87,8 +91,16 @@ repos:
   hooks:
   - id: snakefmt
 
+<<<<<<< HEAD
 # Check for FSFE REUSE compliance (licensing)
 - repo: https://github.com/fsfe/reuse-tool
   rev: v6.2.0
   hooks:
   - id: reuse
+=======
+# # Check for FSFE REUSE compliance (licensing)
+# - repo: https://github.com/fsfe/reuse-tool
+#   rev: v6.2.0
+#   hooks:
+#   - id: reuse
+>>>>>>> upstream/main

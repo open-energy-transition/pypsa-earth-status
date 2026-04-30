@@ -25,9 +25,9 @@ rule clean:
 
 rule clean_data:
     input:
-        demand_owid="data/owid-energy-data.csv",  # from https://nyc3.digitaloceanspaces.com/owid-public/data/energy/owid-energy-data.csv
+        demand_owid="data/electricity_demand/owid-energy-data.csv",  # from https://nyc3.digitaloceanspaces.com/owid-public/data/energy/owid-energy-data.csv
         demand_iea="data/WEO2023_AnnexA_Free_Dataset_Regions.csv",  # from https://www.iea.org/data-and-statistics/data-product/world-energy-outlook-2023-free-dataset-2
-        cap_irena="data/ELECSTAT_20240808-144258.csv",  # IRENA capacity data from https://pxweb.irena.org/pxweb/en/IRENASTAT/IRENASTAT__Power%20Capacity%20and%20Generation/Country_ELECSTAT_2024_H2.px/
+        cap_irena="data/installed_capacity/ELECSTAT_20240808-144258.csv",  # IRENA capacity data from https://pxweb.irena.org/pxweb/en/IRENASTAT/IRENASTAT__Power%20Capacity%20and%20Generation/Country_ELECSTAT_2024_H2.px/
         # other sources
     output:
         demand_owid="resources/clean/owid_demand_data.csv",
@@ -42,9 +42,15 @@ rule clean_data:
 
 rule build_network_geojson:
     input:
+<<<<<<< HEAD
         buscodes="data/electricity-transmission-database/Input - Center points.csv",
         lineexist="data/electricity-transmission-database/GTD-v1.1_regional_existing.csv",
         lineplan="data/electricity-transmission-database/GTD-v1.1_regional_planned.csv",
+=======
+        buscodes="data/electricity_transmission/Input - Center points.csv",
+        lineexist="data/electricity_transmission/GTD-v1.1_regional_existing.csv",
+        lineplan="data/electricity_transmission/GTD-v1.1_regional_planned.csv",
+>>>>>>> upstream/main
         network_path=config["network_validation"]["network_path"],
     output:
         network_existing="resources/reference_statistics/network_exist.geojson",
