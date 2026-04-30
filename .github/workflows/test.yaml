@@ -74,10 +74,12 @@ jobs:
         cp tests/fixtures/all_clean_lines.geojson workflows/pypsa-earth/resources/osm/clean/
         cp tests/fixtures/all_clean_substations.geojson workflows/pypsa-earth/resources/osm/clean/
 
-    - name: Debug data files
+    - name: Setup GTD transmission data
       run: |
-        echo "Working directory: $(pwd)"
-        ls -la data/electricity-transmission/ || echo "Directory missing"
+        mkdir -p data/electricity-transmission
+        cp tests/fixtures/GTD-v1.1_regional_planned.csv data/electricity-transmission/
+        cp tests/fixtures/GTD-v1.1_regional_existing.csv data/electricity-transmission/
+        cp "tests/fixtures/Input - Center points.csv" data/electricity-transmission/
 
     - name: Run Test
       run: snakemake -j 1 visualize_data --forceall
