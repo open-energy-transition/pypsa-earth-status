@@ -77,9 +77,7 @@ jobs:
     - name: Setup GTD transmission data
       run: |
         mkdir -p data/electricity-transmission
-        cp tests/fixtures/GTD-v1.1_regional_planned.csv data/electricity-transmission/
-        cp tests/fixtures/GTD-v1.1_regional_existing.csv data/electricity-transmission/
-        cp "tests/fixtures/Input - Center points.csv" data/electricity-transmission/
+        ls -la data/electricity-transmission/ 
 
     - name: Run Test
       run: snakemake -j 1 visualize_data --forceall
