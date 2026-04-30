@@ -42,16 +42,14 @@ rule clean_data:
 
 rule build_network_geojson:
     input:
-<<<<<<< HEAD
         buscodes="data/electricity-transmission-database/Input - Center points.csv",
         lineexist="data/electricity-transmission-database/GTD-v1.1_regional_existing.csv",
         lineplan="data/electricity-transmission-database/GTD-v1.1_regional_planned.csv",
-=======
-        buscodes="data/electricity_transmission/Input - Center points.csv",
-        lineexist="data/electricity_transmission/GTD-v1.1_regional_existing.csv",
-        lineplan="data/electricity_transmission/GTD-v1.1_regional_planned.csv",
->>>>>>> upstream/main
-        network_path=config["network_validation"]["network_path"],
+        network_path=config["network_validation"]["network_path"], 
+    params:
+        countries=config["network_validation"]["countries"],
+        shapefile=config["network_validation"].get("shapefile", False),
+        validate_cross_border_capacity=config["network_validation"].get("validate_cross_border_capacity", True),
     output:
         network_existing="resources/reference_statistics/network_exist.geojson",
         network_planned="resources/reference_statistics/network_planned.geojson",
