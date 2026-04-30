@@ -74,5 +74,10 @@ jobs:
         cp tests/fixtures/all_clean_lines.geojson workflows/pypsa-earth/resources/osm/clean/
         cp tests/fixtures/all_clean_substations.geojson workflows/pypsa-earth/resources/osm/clean/
 
+    - name: Debug data files
+      run: |
+        echo "Working directory: $(pwd)"
+        ls -la data/electricity-transmission/ || echo "Directory missing"
+
     - name: Run Test
       run: snakemake -j 1 visualize_data --forceall
