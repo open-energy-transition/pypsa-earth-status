@@ -77,7 +77,7 @@ jobs:
     - name: Setup GTD transmission data
       run: |
         mkdir -p data/electricity-transmission
-        ls -la data/electricity-transmission/ 
+        ls -la data/electricity-transmission/
 
     - name: Run Test
       run: snakemake -j 1 visualize_data --forceall
