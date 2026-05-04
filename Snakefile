@@ -45,11 +45,7 @@ rule build_network_geojson:
         buscodes="data/electricity_transmission/Input - Center points.csv",
         lineexist="data/electricity_transmission/GTD-v1.1_regional_existing.csv",
         lineplan="data/electricity_transmission/GTD-v1.1_regional_planned.csv",
-        network_path=config["network_validation"]["network_path"], 
-    params:
-        countries=config["network_validation"]["countries"],
-        shapefile=config["network_validation"].get("shapefile", False),
-        validate_cross_border_capacity=config["network_validation"].get("validate_cross_border_capacity", True),
+        network_path=config["network_validation"]["network_path"],
     output:
         network_existing="resources/reference_statistics/network_exist.geojson",
         network_planned="resources/reference_statistics/network_planned.geojson",
@@ -131,8 +127,13 @@ rule visualize_data:
         demand_comparison="results/tables/demand.csv",
         installed_capacity_comparison="results/tables/installed_capacity.csv",
         optimal_capacity_comparison="results/tables/optimal_capacity.csv",
-        osm_lines=os.path.join(config["plot_osm_grid_network"]["grid_path"], "all_clean_lines.geojson"),
-        osm_substations=os.path.join(config["plot_osm_grid_network"]["grid_path"], "all_clean_substations.geojson"),
+        osm_lines=os.path.join(
+            config["plot_osm_grid_network"]["grid_path"], "all_clean_lines.geojson"
+        ),
+        osm_substations=os.path.join(
+            config["plot_osm_grid_network"]["grid_path"],
+            "all_clean_substations.geojson",
+        ),
         # energy_dispatch_comparison="results/tables/energy_dispatch.geojson"
         # network_comparison="results/tables/network.geojson"
     output:
