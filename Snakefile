@@ -42,9 +42,9 @@ rule clean_data:
 
 rule build_network_geojson:
     input:
-        buscodes="data/electricity-transmission/Input - Center points.csv",
-        lineexist="data/electricity-transmission/GTD-v1.1_regional_existing.csv",
-        lineplan="data/electricity-transmission/GTD-v1.1_regional_planned.csv",
+        buscodes="data/electricity_transmission/Input - Center points.csv",
+        lineexist="data/electricity_transmission/GTD-v1.1_regional_existing.csv",
+        lineplan="data/electricity_transmission/GTD-v1.1_regional_planned.csv",
         network_path=config["network_validation"]["network_path"], 
     params:
         countries=config["network_validation"]["countries"],
