@@ -20,6 +20,19 @@ network_validation:
   shapefile: false
   validate_cross_border_capacity: true # validation of cross border capacity
 
+inflow_validation:
+  run: "validation_dispatch_zambia_2024" # matches resources/{run}/ from workflow directory
+  grdc_station: "KAFUE HOOK BRIDGE (60334669)"
+  glofas_dx: 0.05
+  grdc_dx: 1.0
+  k_scale: 8.5
+  validation_ppl_idx: 0
+  ppl_bbox:
+    lat_min: -17
+    lat_max: -15.5
+    lon_min: 28
+    lon_max: 29
+
 plot_osm_grid_network:
   grid_path: "tests/fixtures"
   line_voltages: [132., 220., 300., 380., 500., 750.]

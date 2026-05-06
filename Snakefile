@@ -18,7 +18,7 @@ configfile: "config.yaml"
 rule clean:
     run:
         try:
-            shell("snakemake -j 1 visualize_data --delete-all-output")
+            shell("snakemake -j 1 all --delete-all-output")
         except:
             pass
 
@@ -153,6 +153,35 @@ rule visualize_data:
         "scripts/visualize_data.py"
 
 
+rule validate_inflow:
+    input:
+        powerplants="workflows/pypsa-earth/resources/{run}/powerplants.csv",
+        hydro_profile="workflows/pypsa-earth/resources/{run}/renewable_profiles/profile_hydro.nc",
+        grdc="workflows/pypsa-earth/runoff/GRDC/GRDC-Daily.nc",
+        glofas_2001="workflows/pypsa-earth/runoff/GloFAS/zm-2001-glofas.nc",
+        glofas_2002="workflows/pypsa-earth/runoff/GloFAS/zm-2002-glofas.nc",
+        glofas_2013="workflows/pypsa-earth/runoff/GloFAS/zm-2013-glofas.nc",
+    output:
+        grdc_ts_pdf="results/{run}/inflow_validation/grdc_timeseries.pdf",
+        spatial_map_png="results/{run}/inflow_validation/spatial_hydro_map.png",
+        grdc_vs_glofas="results/{run}/inflow_validation/grdc_vs_glofas.pdf",
+        glofas_vs_atlite="results/{run}/inflow_validation/glofas_vs_atlite.png",
+    log:
+        "logs/{run}/inflow_validation.log",
+    params:
+        grdc_station=config["inflow_validation"]["grdc_station"],
+        glofas_dx=config["inflow_validation"].get("glofas_dx", 0.05),
+        grdc_dx=config["inflow_validation"].get("grdc_dx", 1.0),
+        k_scale=config["inflow_validation"].get("k_scale", 8.5),
+        ppl_bbox=config["inflow_validation"].get(
+            "ppl_bbox",
+            {"lat_min": -17, "lat_max": -15.5, "lon_min": 28, "lon_max": 29},
+        ),
+        validation_ppl_idx=config["inflow_validation"].get("validation_ppl_idx", 0),
+    script:
+        "scripts/inflow_validation.py"
+
+
 rule create_example_DE:
     output:
         "resources/example_DE.nc",
@@ -165,3 +194,12 @@ rule create_example_DE:
         n.buses["country"] = "DE"
         n.export_to_netcdf(output[0])
         print(f"Created example network at {output[0]}")
+
+
+rule all:
+    input:
+        rules.visualize_data.output,
+        expand(
+            rules.validate_inflow.output,
+            run=config["inflow_validation"]["run"],
+        ),
