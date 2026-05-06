@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText:  PyPSA-Earth and PyPSA-Eur Authors
+#
+# SPDX-License-Identifier: CC0-1.0
+
 version: 0.0.1
 
 methodology: network_validation   # technique used in the validation:
@@ -28,3 +32,9 @@ inflow_validation:
     lat_max: -15.5
     lon_min: 28
     lon_max: 29
+
+plot_osm_grid_network:
+  grid_path: "tests/fixtures"
+  line_voltages: [132., 220., 300., 380., 500., 750.]
+  voltage_colors: ["#deb887", "#ff7f50", "#cd5c5c", "#9400D3", "#00ced1", "#ffffff"]  # colors for each voltage level in line_voltages
+  plot_circuits: false  # whether to plot the number of circuits on the lines if available
