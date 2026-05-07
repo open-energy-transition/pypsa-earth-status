@@ -108,21 +108,21 @@ def build_mapping(
     return df
 
 
-if __name__ == "__main__":
-
+if "snakemake" not in dir():
     snakemake = mock_snakemake(
         "build_hydro_station_mapping",
         run="validation_dispatch_zambia_2024",
     )
-    configure_logging(snakemake)
 
-    mapping = build_mapping(
-        powerplants_path=Path(snakemake.input.powerplants),
-        network_path=Path(snakemake.input.network),
-        station_to_powerplants=snakemake.params.station_to_powerplants,
-    )
+configure_logging(snakemake)
 
-    out_path = Path(snakemake.output.mapping)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    mapping.to_csv(out_path, index=False)
-    logger.info("Saved hydro station mapping → %s", out_path)
+mapping = build_mapping(
+    powerplants_path=Path(snakemake.input.powerplants),
+    network_path=Path(snakemake.input.network),
+    station_to_powerplants=snakemake.params.station_to_powerplants,
+)
+
+out_path = Path(snakemake.output.mapping)
+out_path.parent.mkdir(parents=True, exist_ok=True)
+mapping.to_csv(out_path, index=False)
+logger.info("Saved hydro station mapping → %s", out_path)

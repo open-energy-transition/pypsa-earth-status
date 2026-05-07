@@ -181,34 +181,35 @@ def plot_annual_comparison(
     output_path: Path,
 ) -> None:
     ref_col = f"gen_{model_year}_gwh"
-    if ref_col not in ref.columns:
-        logger.warning(
-            "No reference column for year %d — skipping annual plot.", model_year
-        )
-        return
+    has_ref = ref_col in ref.columns
 
-    stations = model.index.intersection(ref.index)
-    if stations.empty:
-        logger.warning("No station overlap between model and reference — skipping plot.")
-        return
-
-    ref_vals = ref.loc[stations, ref_col]
-    model_vals = model.loc[stations]
+    stations = model.index
+    if has_ref:
+        stations = model.index.intersection(ref.index)
+        if stations.empty:
+            logger.warning("No station overlap between model and reference — plotting model only.")
+            has_ref = False
+            stations = model.index
 
     x = np.arange(len(stations))
-    width = 0.35
+    width = 0.35 if has_ref else 0.5
 
     fig, ax = plt.subplots(figsize=(8, 5))
-    bars_ref   = ax.bar(x - width / 2, ref_vals,   width, label=f"ZESCO reference ({model_year})",
-                        color="steelblue")
-    bars_model = ax.bar(x + width / 2, model_vals, width, label="PyPSA-Earth model",
-                        color="coral")
 
-    for i, (r, m) in enumerate(zip(ref_vals, model_vals)):
-        if r > 0:
-            pct = (m - r) / r * 100
-            ax.text(x[i] + width / 2, m + 30, f"{pct:+.1f}%",
-                    ha="center", va="bottom", fontsize=8)
+    if has_ref:
+        ref_vals = ref.loc[stations, ref_col]
+        model_vals = model.loc[stations]
+        ax.bar(x - width / 2, ref_vals,   width, label=f"ZESCO reference ({model_year})", color="steelblue")
+        ax.bar(x + width / 2, model_vals, width, label="PyPSA-Earth model", color="coral")
+        for i, (r, m) in enumerate(zip(ref_vals, model_vals)):
+            if r > 0:
+                pct = (m - r) / r * 100
+                ax.text(x[i] + width / 2, m + 30, f"{pct:+.1f}%",
+                        ha="center", va="bottom", fontsize=8)
+    else:
+        logger.warning("No reference data for year %d — plotting model only.", model_year)
+        model_vals = model.loc[stations]
+        ax.bar(x, model_vals, width, label="PyPSA-Earth model (no reference)", color="coral")
 
     ax.set_xticks(x)
     ax.set_xticklabels(stations, rotation=15, ha="right")
@@ -353,21 +354,21 @@ def main(
     plot_monthly_comparison(model_monthly, ref_monthly_aligned, out_monthly_png)
 
 
-if __name__ == "__main__":
-
+if "snakemake" not in dir():
     snakemake = mock_snakemake(
         "validate_hydro_generation",
         run="validation_dispatch_zambia_2024",
     )
-    configure_logging(snakemake)
 
-    main(
-        network_path     = Path(snakemake.input.network),
-        mapping_path     = Path(snakemake.input.mapping),
-        ref_annual_path  = Path(snakemake.input.ref_annual),
-        ref_monthly_path = Path(snakemake.input.ref_monthly),
-        out_annual_csv   = Path(snakemake.output.annual_csv),
-        out_annual_png   = Path(snakemake.output.annual_png),
-        out_monthly_csv  = Path(snakemake.output.monthly_csv),
-        out_monthly_png  = Path(snakemake.output.monthly_png),
-    )
+configure_logging(snakemake)
+
+main(
+    network_path     = Path(snakemake.input.network),
+    mapping_path     = Path(snakemake.input.mapping),
+    ref_annual_path  = Path(snakemake.input.ref_annual),
+    ref_monthly_path = Path(snakemake.input.ref_monthly),
+    out_annual_csv   = Path(snakemake.output.annual_csv),
+    out_annual_png   = Path(snakemake.output.annual_png),
+    out_monthly_csv  = Path(snakemake.output.monthly_csv),
+    out_monthly_png  = Path(snakemake.output.monthly_png),
+)

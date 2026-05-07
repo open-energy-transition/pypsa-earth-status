@@ -251,21 +251,21 @@ def main(
     )
 
 
-if __name__ == "__main__":
-
+if "snakemake" not in dir():
     snakemake = mock_snakemake(
         "validate_system_metrics",
         run="validation_dispatch_zambia_2024",
     )
-    configure_logging(snakemake)
 
-    main(
-        network_path            = Path(snakemake.input.network),
-        out_load_shedding_csv   = Path(snakemake.output.load_shedding_csv),
-        out_load_shedding_png   = Path(snakemake.output.load_shedding_png),
-        out_imports_exports_csv = Path(snakemake.output.imports_exports_csv),
-        out_imports_exports_png = Path(snakemake.output.imports_exports_png),
-        country                 = snakemake.params.country,
-        reference_imports_gwh   = snakemake.params.get("reference_imports_gwh", None),
-        reference_exports_gwh   = snakemake.params.get("reference_exports_gwh", None),
-    )
+configure_logging(snakemake)
+
+main(
+    network_path            = Path(snakemake.input.network),
+    out_load_shedding_csv   = Path(snakemake.output.load_shedding_csv),
+    out_load_shedding_png   = Path(snakemake.output.load_shedding_png),
+    out_imports_exports_csv = Path(snakemake.output.imports_exports_csv),
+    out_imports_exports_png = Path(snakemake.output.imports_exports_png),
+    country                 = snakemake.params.country,
+    reference_imports_gwh   = snakemake.params.get("reference_imports_gwh", None),
+    reference_exports_gwh   = snakemake.params.get("reference_exports_gwh", None),
+)
