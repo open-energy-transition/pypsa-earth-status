@@ -18,7 +18,7 @@ configfile: "config.yaml"
 rule clean:
     run:
         try:
-            shell("snakemake -j 1 visualize_data --delete-all-output")
+            shell("snakemake -j 1 solve_all --delete-all-output")
         except:
             pass
 
@@ -213,3 +213,16 @@ rule create_example_DE:
         n.buses["country"] = "DE"
         n.export_to_netcdf(output[0])
         print(f"Created example network at {output[0]}")
+
+
+rule solve_all:
+    input:
+        rules.visualize_data.output,
+        expand(
+            rules.validate_hydro_generation.output,
+            run=config["hydro_generation_validation"]["run"],
+        ),
+        expand(
+            rules.validate_system_metrics.output,
+            run=config["hydro_generation_validation"]["run"],
+        ),
