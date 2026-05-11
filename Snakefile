@@ -165,11 +165,11 @@ rule build_hydro_station_mapping:
         powerplants = "workflows/pypsa-earth/resources/powerplants.csv",
         network     = config["hydro_generation_validation"]["network_path"],
     output:
-        mapping = "resources/{run}/hydro_station_bus_map.csv",
+        mapping = "resources/hydro_station_bus_map.csv",
     params:
         station_to_powerplants = config["hydro_generation_validation"]["station_to_powerplants"],
     log:
-        "logs/{run}/build_hydro_station_mapping.log",
+        "logs/build_hydro_station_mapping.log",
     script:
         "scripts/build_hydro_station_mapping.py"
 
@@ -177,16 +177,16 @@ rule build_hydro_station_mapping:
 rule validate_hydro_generation:
     input:
         network      = config["hydro_generation_validation"]["network_path"],
-        mapping      = "resources/{run}/hydro_station_bus_map.csv",
+        mapping      = "resources/hydro_station_bus_map.csv",
         ref_annual   = "data/hydro_reference/Net_electricity_generated-large_hydro.csv",
         ref_monthly  = "data/hydro_reference/ZESCO_Large_Hydro_Power_Plants_Electricity_Generation_Jan-Jun_2025.csv",
     output:
-        annual_csv   = "results/{run}/hydro_validation/annual_comparison.csv",
-        annual_png   = "results/{run}/hydro_validation/annual_comparison.png",
-        monthly_csv  = "results/{run}/hydro_validation/monthly_model.csv",
-        monthly_png  = "results/{run}/hydro_validation/monthly_comparison.png",
+        annual_csv   = "results/hydro_validation/annual_comparison.csv",
+        annual_png   = "results/hydro_validation/annual_comparison.png",
+        monthly_csv  = "results/hydro_validation/monthly_model.csv",
+        monthly_png  = "results/hydro_validation/monthly_comparison.png",
     log:
-        "logs/{run}/validate_hydro_generation.log",
+        "logs/validate_hydro_generation.log",
     script:
         "scripts/validate_hydro_generation.py"
 
@@ -195,16 +195,16 @@ rule validate_system_metrics:
     input:
         network = config["hydro_generation_validation"]["network_path"],
     output:
-        load_shedding_csv    = "results/{run}/system_metrics/load_shedding.csv",
-        load_shedding_png    = "results/{run}/system_metrics/load_shedding.png",
-        imports_exports_csv  = "results/{run}/system_metrics/imports_exports.csv",
-        imports_exports_png  = "results/{run}/system_metrics/imports_exports.png",
+        load_shedding_csv    = "results/system_metrics/load_shedding.csv",
+        load_shedding_png    = "results/system_metrics/load_shedding.png",
+        imports_exports_csv  = "results/system_metrics/imports_exports.csv",
+        imports_exports_png  = "results/system_metrics/imports_exports.png",
     params:
         country               = config["hydro_generation_validation"].get("country", "ZM"),
         reference_imports_gwh = config["hydro_generation_validation"].get("reference_imports_gwh", None),
         reference_exports_gwh = config["hydro_generation_validation"].get("reference_exports_gwh", None),
     log:
-        "logs/{run}/validate_system_metrics.log",
+        "logs/validate_system_metrics.log",
     script:
         "scripts/validate_system_metrics.py"
 
@@ -225,11 +225,5 @@ rule create_example_DE:
 rule run_all:
     input:
         rules.visualize_data.output,
-        expand(
-            rules.validate_hydro_generation.output,
-            run=config["hydro_generation_validation"]["run"],
-        ),
-        expand(
-            rules.validate_system_metrics.output,
-            run=config["hydro_generation_validation"]["run"],
-        ),
+        rules.validate_hydro_generation.output,
+        rules.validate_system_metrics.output,

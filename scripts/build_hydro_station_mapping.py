@@ -16,7 +16,6 @@ is counted twice for the same station.
 """
 
 import logging
-import sys
 from pathlib import Path
 
 import numpy as np
@@ -101,10 +100,7 @@ def build_mapping(
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        snakemake = mock_snakemake(
-            "build_hydro_station_mapping",
-            run="validation_dispatch_zambia_2024",
-        )
+        snakemake = mock_snakemake("build_hydro_station_mapping")
 
     configure_logging(snakemake)
 

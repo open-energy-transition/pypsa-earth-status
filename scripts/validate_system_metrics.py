@@ -264,9 +264,6 @@ def main(snakemake) -> None:
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-        snakemake = mock_snakemake(
-            "validate_system_metrics",
-            run="validation_dispatch_zambia_2024",
-        )
+        snakemake = mock_snakemake("validate_system_metrics")
     configure_logging(snakemake)
     main(snakemake)

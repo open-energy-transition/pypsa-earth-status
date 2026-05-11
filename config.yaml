@@ -30,8 +30,6 @@ plot_osm_grid_network:
 
 #--------------------------Zambia-focused hydro generation validation--------------------------
 hydro_generation_validation:
-  run: "validation_dispatch_zambia_2024"   # matches resources/{run}/ and results/{run}/
-
   # Full path to the solved PyPSA-Earth network imported from the pypsa-zambia workflow.
   network_path: "../pypsa-zambia/results/validation_dispatch_zambia_2024/networks/elec_s_10_ec_lv1.0_Co2L-3h.nc"
 
