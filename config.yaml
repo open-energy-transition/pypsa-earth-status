@@ -27,6 +27,8 @@ plot_osm_grid_network:
   plot_circuits: false  # whether to plot the number of circuits on the lines if available
 
 
+
+#--------------------------Zambia-focused hydro generation validation--------------------------
 hydro_generation_validation:
   run: "validation_dispatch_zambia_2024"   # matches resources/{run}/ and results/{run}/
 
