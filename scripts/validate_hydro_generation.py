@@ -75,49 +75,11 @@ def load_monthly_reference(path: Path) -> pd.DataFrame:
     return df[["station_name"] + month_cols].set_index("station_name")
 
 
-def extract_model_generation_by_bus(n: pypsa.Network) -> pd.Series:
+def _weighted_generation_by_bus(n: pypsa.Network) -> pd.DataFrame:
     """
-    Return total generation (GWh) indexed by bus_id, combining both
-    reservoir storage units (carrier='hydro') and run-of-river generators
-    (carrier='ror').
-    """
-    parts = []
-
-    hydro_sus = n.storage_units.query("carrier == 'hydro'").index
-    if len(hydro_sus):
-        reservoir = (
-            n.storage_units_t.p[hydro_sus]
-            .mul(n.snapshot_weightings.generators, axis=0)
-            .sum()
-        )
-        reservoir.index = n.storage_units.loc[hydro_sus, "bus"]
-        parts.append(reservoir)
-    else:
-        logger.warning("No storage units with carrier='hydro' found in network.")
-
-    ror_gens = n.generators.query("carrier == 'ror'").index
-    if len(ror_gens):
-        ror = (
-            n.generators_t.p[ror_gens]
-            .mul(n.snapshot_weightings.generators, axis=0)
-            .sum()
-        )
-        ror.index = n.generators.loc[ror_gens, "bus"]
-        parts.append(ror)
-    else:
-        logger.warning("No generators with carrier='ror' found in network.")
-
-    if not parts:
-        raise ValueError("Network contains neither hydro storage units nor ror generators.")
-
-    combined = pd.concat(parts)
-    return combined.groupby(level=0).sum() / 1e3  # MW·h → GWh
-
-
-def extract_model_generation_monthly_by_bus(n: pypsa.Network) -> pd.DataFrame:
-    """
-    Return monthly generation (GWh) as DataFrame (index=month end timestamp,
-    columns=bus_id).
+    Return snapshot-weighted energy (MW·h) as DataFrame(snapshots x bus_id),
+    combining reservoir (carrier='hydro') and run-of-river (carrier='ror').
+    Duplicate bus columns (from clustering) are summed together.
     """
     parts = []
 
@@ -127,7 +89,9 @@ def extract_model_generation_monthly_by_bus(n: pypsa.Network) -> pd.DataFrame:
             n.snapshot_weightings.generators, axis=0
         )
         weighted.columns = n.storage_units.loc[hydro_sus, "bus"]
-        parts.append(weighted.resample("ME").sum())
+        parts.append(weighted)
+    else:
+        logger.warning("No storage units with carrier='hydro' found in network.")
 
     ror_gens = n.generators.query("carrier == 'ror'").index
     if len(ror_gens):
@@ -135,14 +99,26 @@ def extract_model_generation_monthly_by_bus(n: pypsa.Network) -> pd.DataFrame:
             n.snapshot_weightings.generators, axis=0
         )
         weighted.columns = n.generators.loc[ror_gens, "bus"]
-        parts.append(weighted.resample("ME").sum())
+        parts.append(weighted)
+    else:
+        logger.warning("No generators with carrier='ror' found in network.")
 
     if not parts:
         raise ValueError("Network contains neither hydro storage units nor ror generators.")
 
     combined = pd.concat(parts, axis=1)
-    combined = combined.groupby(level=0, axis=1).sum() / 1e3  # GWh
-    return combined
+    combined.columns.name = "bus_id"
+    return combined.T.groupby("bus_id").sum().T
+
+
+def extract_model_generation_by_bus(n: pypsa.Network) -> pd.Series:
+    """Return total generation (GWh) indexed by bus_id."""
+    return _weighted_generation_by_bus(n).sum() / 1e3  # MW·h → GWh
+
+
+def extract_model_generation_monthly_by_bus(n: pypsa.Network) -> pd.DataFrame:
+    """Return monthly generation (GWh) as DataFrame (index=month end timestamp, columns=bus_id)."""
+    return _weighted_generation_by_bus(n).resample("ME").sum() / 1e3  # MW·h → GWh
 
 
 def aggregate_to_stations(
@@ -150,14 +126,15 @@ def aggregate_to_stations(
     mapping: pd.DataFrame,
 ) -> pd.Series:
     """
-    For each station, sum generation across its unique mapped buses.
+    For each named generating facility in the ERB reference data, sum
+    generation across its unique mapped buses.
     Deduplicating on bus_id ensures a bus is not counted twice when two
     physical plants were merged into the same clustered bus.
     """
     result = {}
-    for station, grp in mapping.groupby("station_name"):
+    for erb_plant_name, grp in mapping.groupby("station_name"):
         unique_buses = grp["bus_id"].unique()
-        result[station] = gen_by_bus.reindex(unique_buses).sum()
+        result[erb_plant_name] = gen_by_bus.reindex(unique_buses).sum()
     return pd.Series(result)
 
 
@@ -165,13 +142,11 @@ def aggregate_monthly_to_stations(
     monthly: pd.DataFrame,
     mapping: pd.DataFrame,
 ) -> pd.DataFrame:
-    """Monthly version: rows=timestamp, columns=station_name."""
-    result = {}
-    for station, grp in mapping.groupby("station_name"):
-        unique_buses = grp["bus_id"].unique()
-        cols = [b for b in unique_buses if b in monthly.columns]
-        result[station] = monthly[cols].sum(axis=1)
-    return pd.DataFrame(result)
+    """Monthly version: rows=timestamp, columns=ERB facility name."""
+    return monthly.apply(
+        lambda month: aggregate_to_stations(month, mapping),
+        axis=1,
+    )
 
 
 def plot_annual_comparison(
@@ -280,16 +255,15 @@ def plot_monthly_comparison(
     logger.info("Saved monthly comparison plot → %s", output_path)
 
 
-def main(
-    network_path: Path,
-    mapping_path: Path,
-    ref_annual_path: Path,
-    ref_monthly_path: Path,
-    out_annual_csv: Path,
-    out_annual_png: Path,
-    out_monthly_csv: Path,
-    out_monthly_png: Path,
-) -> None:
+def main(snakemake) -> None:
+    network_path     = Path(snakemake.input.network)
+    mapping_path     = Path(snakemake.input.mapping)
+    ref_annual_path  = Path(snakemake.input.ref_annual)
+    ref_monthly_path = Path(snakemake.input.ref_monthly)
+    out_annual_csv   = Path(snakemake.output.annual_csv)
+    out_annual_png   = Path(snakemake.output.annual_png)
+    out_monthly_csv  = Path(snakemake.output.monthly_csv)
+    out_monthly_png  = Path(snakemake.output.monthly_png)
 
     logger.info("Loading network from %s", network_path)
     n = pypsa.Network(str(network_path))
@@ -356,20 +330,9 @@ def main(
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-    snakemake = mock_snakemake(
-        "validate_hydro_generation",
-        run="validation_dispatch_zambia_2024",
-    )
-
-configure_logging(snakemake)
-
-main(
-    network_path     = Path(snakemake.input.network),
-    mapping_path     = Path(snakemake.input.mapping),
-    ref_annual_path  = Path(snakemake.input.ref_annual),
-    ref_monthly_path = Path(snakemake.input.ref_monthly),
-    out_annual_csv   = Path(snakemake.output.annual_csv),
-    out_annual_png   = Path(snakemake.output.annual_png),
-    out_monthly_csv  = Path(snakemake.output.monthly_csv),
-    out_monthly_png  = Path(snakemake.output.monthly_png),
-)
+        snakemake = mock_snakemake(
+            "validate_hydro_generation",
+            run="validation_dispatch_zambia_2024",
+        )
+    configure_logging(snakemake)
+    main(snakemake)
