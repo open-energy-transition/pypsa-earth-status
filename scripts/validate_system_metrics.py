@@ -251,7 +251,8 @@ def main(
     )
 
 
-if "snakemake" not in dir():
+if __name__ == "__main__":
+    if "snakemake" not in globals():
     snakemake = mock_snakemake(
         "validate_system_metrics",
         run="validation_dispatch_zambia_2024",
