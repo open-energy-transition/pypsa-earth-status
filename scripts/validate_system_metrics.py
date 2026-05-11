@@ -49,7 +49,10 @@ def extract_load_shedding(n: pypsa.Network) -> pd.DataFrame:
         .sum()
     )
     ls_gen.index = n.generators.loc[ls_gens, "bus"]
-    ls_by_bus = ls_gen.groupby(level=0).sum() / 1e3  # GWh
+    ls_gen.index.name = "bus"
+    # clustering can place multiple load-shedding generators on the same bus;
+    # groupby sums them so each bus is counted once
+    ls_by_bus = ls_gen.groupby("bus").sum() / 1e3  # MW·h → GWh
 
     df = ls_by_bus.reset_index()
     df.columns = ["bus", "load_shedding_gwh"]
@@ -111,6 +114,13 @@ def extract_imports_exports(
     exports_total = 0.0
     rows = []
 
+    # Assumptions:
+    # - PyPSA-Earth tags every bus with an ISO2 'country' attribute.
+    # - Cross-border links are two-bus (bus0/bus1 only); multi-port buses
+    #   (bus2…bus4) are not used for cross-border flows.
+    # - PyPSA sign convention: p0 > 0 means power flows bus0 → bus1.
+    #   When the target country is on bus0, positive p0 is an export.
+    #   When it is on bus1, positive p0 is an import (signs reversed).
     for link in n.links.index:
         bus0 = n.links.loc[link, "bus0"]
         bus1 = n.links.loc[link, "bus1"]
@@ -119,6 +129,8 @@ def extract_imports_exports(
 
         if c0 == country:
             flow = flows_gwh[link]
+            # flow is a signed annual net: clip to zero to split into
+            # non-negative export and import components
             exp = max(flow, 0.0)
             imp = max(-flow, 0.0)
         elif c1 == country:
@@ -202,16 +214,15 @@ def plot_imports_exports(
     logger.info("Saved imports/exports plot → %s", output_path)
 
 
-def main(
-    network_path: Path,
-    out_load_shedding_csv: Path,
-    out_load_shedding_png: Path,
-    out_imports_exports_csv: Path,
-    out_imports_exports_png: Path,
-    country: str = "ZM",
-    reference_imports_gwh: float | None = None,
-    reference_exports_gwh: float | None = None,
-) -> None:
+def main(snakemake) -> None:
+    network_path            = Path(snakemake.input.network)
+    out_load_shedding_csv   = Path(snakemake.output.load_shedding_csv)
+    out_load_shedding_png   = Path(snakemake.output.load_shedding_png)
+    out_imports_exports_csv = Path(snakemake.output.imports_exports_csv)
+    out_imports_exports_png = Path(snakemake.output.imports_exports_png)
+    country                 = snakemake.params.country
+    reference_imports_gwh   = snakemake.params.get("reference_imports_gwh", None)
+    reference_exports_gwh   = snakemake.params.get("reference_exports_gwh", None)
 
     logger.info("Loading network from %s", network_path)
     n = pypsa.Network(str(network_path))
@@ -253,20 +264,9 @@ def main(
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-    snakemake = mock_snakemake(
-        "validate_system_metrics",
-        run="validation_dispatch_zambia_2024",
-    )
-
-configure_logging(snakemake)
-
-main(
-    network_path            = Path(snakemake.input.network),
-    out_load_shedding_csv   = Path(snakemake.output.load_shedding_csv),
-    out_load_shedding_png   = Path(snakemake.output.load_shedding_png),
-    out_imports_exports_csv = Path(snakemake.output.imports_exports_csv),
-    out_imports_exports_png = Path(snakemake.output.imports_exports_png),
-    country                 = snakemake.params.country,
-    reference_imports_gwh   = snakemake.params.get("reference_imports_gwh", None),
-    reference_exports_gwh   = snakemake.params.get("reference_exports_gwh", None),
-)
+        snakemake = mock_snakemake(
+            "validate_system_metrics",
+            run="validation_dispatch_zambia_2024",
+        )
+    configure_logging(snakemake)
+    main(snakemake)
