@@ -354,7 +354,8 @@ def main(
     plot_monthly_comparison(model_monthly, ref_monthly_aligned, out_monthly_png)
 
 
-if "snakemake" not in dir():
+if __name__ == "__main__":
+    if "snakemake" not in globals():
     snakemake = mock_snakemake(
         "validate_hydro_generation",
         run="validation_dispatch_zambia_2024",
