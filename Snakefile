@@ -18,7 +18,14 @@ configfile: "config.yaml"
 rule clean:
     run:
         try:
-            shell("snakemake -j 1 solve_all --delete-all-output")
+            shell("snakemake -j 1 visualize_data --delete-all-output")
+        except:
+            pass
+
+rule clean_all:
+    run:
+        try:
+            shell("snakemake -j 1 run_all --delete-all-output")
         except:
             pass
 
@@ -215,7 +222,7 @@ rule create_example_DE:
         print(f"Created example network at {output[0]}")
 
 
-rule solve_all:
+rule run_all:
     input:
         rules.visualize_data.output,
         expand(
