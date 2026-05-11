@@ -41,54 +41,33 @@ def build_mapping(
     ppl = pd.read_csv(powerplants_path)
     n = pypsa.Network(str(network_path))
 
-    # Bus coordinates — PyPSA stores lon in x, lat in y
     buses = n.buses[["x", "y"]].rename(columns={"x": "bus_lon", "y": "bus_lat"})
     buses = buses.dropna(subset=["bus_lat", "bus_lon"])
     if buses.empty:
         raise ValueError("No buses with valid coordinates found in the network.")
-    bus_coords = buses[["bus_lat", "bus_lon"]].values  # (N, 2)
-    kd = KDTree(bus_coords)
+    kd = KDTree(buses[["bus_lat", "bus_lon"]].values)
 
-    rows = []
-    for station, plant_names in station_to_powerplants.items():
-        for plant_name in plant_names:
-            matches = ppl[ppl["Name"] == plant_name]
-            if matches.empty:
-                logger.warning(
-                    "Plant '%s' (station '%s') not found in powerplants.csv — skipping.",
-                    plant_name, station,
-                )
-                continue
+    # Flatten station→plant dict into a DataFrame
+    pairs = pd.DataFrame(
+        [(s, p) for s, plants in station_to_powerplants.items() for p in plants],
+        columns=["station_name", "plant_name"],
+    )
 
-            # Use the first row if there are duplicates (e.g. ITT split entries)
-            row = matches.iloc[0]
-            plant_lat, plant_lon = row["lat"], row["lon"]
+    # Join plant coordinates; drop_duplicates collapses split entries (e.g. ITT)
+    ppl_coords = (
+        ppl.drop_duplicates(subset=["Name"])
+        .rename(columns={"Name": "plant_name", "lat": "plant_lat", "lon": "plant_lon"})
+        [["plant_name", "plant_lat", "plant_lon"]]
+    )
+    df = pairs.merge(ppl_coords, on="plant_name", how="left")
 
-            dist, idx = kd.query([plant_lat, plant_lon])
-            matched_bus = buses.index[idx]
-            bus_row = buses.iloc[idx]
-
-            # Approximate km distance (1° ≈ 111 km)
-            dist_km = dist * 111.0
-
-            rows.append(
-                {
-                    "station_name": station,
-                    "plant_name": plant_name,
-                    "bus_id": matched_bus,
-                    "plant_lat": plant_lat,
-                    "plant_lon": plant_lon,
-                    "bus_lat": bus_row["bus_lat"],
-                    "bus_lon": bus_row["bus_lon"],
-                    "distance_km": round(dist_km, 2),
-                }
-            )
-            logger.info(
-                "  %s / %-25s → bus %-6s  (%.1f km)",
-                station, plant_name, matched_bus, dist_km,
-            )
-
-    df = pd.DataFrame(rows)
+    missing = df[df["plant_lat"].isna()]
+    if not missing.empty:
+        logger.warning(
+            "The following plants were not found in powerplants.csv and were skipped:\n%s",
+            missing[["station_name", "plant_name"]].to_string(index=False),
+        )
+    df = df.dropna(subset=["plant_lat", "plant_lon"])
 
     if df.empty:
         raise ValueError(
@@ -96,7 +75,14 @@ def build_mapping(
             "exactly match the 'Name' column in powerplants.csv."
         )
 
-    # Warn if any plant mapped very far from a bus (likely a clustering artefact)
+    # Batch spatial query — all plants in one KDTree call
+    dists, idxs = kd.query(df[["plant_lat", "plant_lon"]].values)
+
+    df["bus_id"] = buses.index[idxs]
+    df["bus_lat"] = buses["bus_lat"].values[idxs]
+    df["bus_lon"] = buses["bus_lon"].values[idxs]
+    df["distance_km"] = np.round(dists * 111.0, 2)
+
     far = df[df["distance_km"] > 50]
     if not far.empty:
         logger.warning(
@@ -105,25 +91,30 @@ def build_mapping(
             far[["station_name", "plant_name", "bus_id", "distance_km"]].to_string(),
         )
 
-    return df
+    logger.info("Mapped %d plants across %d stations:\n%s", len(df),
+                df["station_name"].nunique(),
+                df[["station_name", "plant_name", "bus_id", "distance_km"]].to_string(index=False))
+
+    return df[["station_name", "plant_name", "bus_id",
+               "plant_lat", "plant_lon", "bus_lat", "bus_lon", "distance_km"]]
 
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
-    snakemake = mock_snakemake(
-        "build_hydro_station_mapping",
-        run="validation_dispatch_zambia_2024",
+        snakemake = mock_snakemake(
+            "build_hydro_station_mapping",
+            run="validation_dispatch_zambia_2024",
+        )
+
+    configure_logging(snakemake)
+
+    mapping = build_mapping(
+        powerplants_path=Path(snakemake.input.powerplants),
+        network_path=Path(snakemake.input.network),
+        station_to_powerplants=snakemake.params.station_to_powerplants,
     )
 
-configure_logging(snakemake)
-
-mapping = build_mapping(
-    powerplants_path=Path(snakemake.input.powerplants),
-    network_path=Path(snakemake.input.network),
-    station_to_powerplants=snakemake.params.station_to_powerplants,
-)
-
-out_path = Path(snakemake.output.mapping)
-out_path.parent.mkdir(parents=True, exist_ok=True)
-mapping.to_csv(out_path, index=False)
-logger.info("Saved hydro station mapping → %s", out_path)
+    out_path = Path(snakemake.output.mapping)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    mapping.to_csv(out_path, index=False)
+    logger.info("Saved hydro station mapping → %s", out_path)
