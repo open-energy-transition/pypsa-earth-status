@@ -108,7 +108,8 @@ def build_mapping(
     return df
 
 
-if "snakemake" not in dir():
+if __name__ == "__main__":
+    if "snakemake" not in globals():
     snakemake = mock_snakemake(
         "build_hydro_station_mapping",
         run="validation_dispatch_zambia_2024",
