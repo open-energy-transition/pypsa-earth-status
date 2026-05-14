@@ -100,12 +100,25 @@ def plot_load_shedding(df: pd.DataFrame, output_path: Path) -> None:
 def extract_imports_exports(
     n: pypsa.Network,
     country: str = "ZM",
+    carrier: str = "AC",
 ) -> dict:
     """
     Compute annual cross-border imports and exports (GWh) for `country`.
+
+    Parameters
+    ----------
+    n : pypsa.Network
+        Solved PyPSA network.
+    country : str, optional
+        ISO2 country code whose cross-border flows are analysed. Default ``"ZM"``.
+    carrier : str, optional
+        Link carrier to consider. Only links whose ``carrier`` attribute matches
+        this value are included in the flow calculation. Default ``"AC"``.
     """
+    filtered_links = n.links[n.links.carrier == carrier].index
+
     flows_gwh = (
-        n.links_t.p0
+        n.links_t.p0[filtered_links]
         .mul(n.snapshot_weightings.objective, axis=0)
         .sum() / 1e3
     )
@@ -121,7 +134,7 @@ def extract_imports_exports(
     # - PyPSA sign convention: p0 > 0 means power flows bus0 → bus1.
     #   When the target country is on bus0, positive p0 is an export.
     #   When it is on bus1, positive p0 is an import (signs reversed).
-    for link in n.links.index:
+    for link in filtered_links:
         bus0 = n.links.loc[link, "bus0"]
         bus1 = n.links.loc[link, "bus1"]
         c0 = n.buses.loc[bus0, "country"]
