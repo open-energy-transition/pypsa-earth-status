@@ -133,7 +133,7 @@ def aggregate_to_stations(
     """
     result = {}
     for erb_plant_name, grp in mapping.groupby("station_name"):
-        unique_buses = grp["bus_id"].unique()
+        unique_buses = grp["bus_id"].astype(str).unique()
         result[erb_plant_name] = gen_by_bus.reindex(unique_buses).sum()
     return pd.Series(result)
 
